@@ -1,0 +1,281 @@
+<!-- <!DOCTYPE html>
+<html lang="en"> -->
+
+<head>
+  <title>Z2P</title>
+  <!-- HTML5 Shim and Respond.js IE10 support of HTML5 elements and media queries -->
+  <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+  <!--[if lt IE 10]> <![endif]-->
+  <!-- Meta -->
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimal-ui" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="description" content="PayMate MIS" />
+  <meta name="keywords" content="PayMate MIS" />
+  <meta name="author" content="PayMate India" />
+  <!-- Favicon icon -->
+
+  <link rel="icon" href="{{ url_for('static', filename='assets/images/favicon.png')}}" type="image/x-icon" />
+  <!-- Google font-->
+  <link href="https://fonts.googleapis.com/css?family=Roboto:400,500" rel="stylesheet" />
+  <!-- Required Fremwork -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/bootstrap/css/bootstrap.min.css')}}" />
+  <!-- waves.css -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='assets/pages/waves/css/waves.min.css')}}" type="text/css" media="all" />
+  <!-- themify-icons line icon -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/icon/themify-icons/themify-icons.css')}}" />
+  <!-- ico font -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/icon/icofont/css/icofont.css')}}" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/icon/font-awesome/css/font-awesome.min.css')}}" />
+  <!-- Style.css -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/css/style.css')}}" />
+  <!-- Notification.css -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='assets/pages/notification/notification.css')}}" />
+</head>
+
+<body themebg-pattern="theme1">
+  <!-- Pre-loader start -->
+  <div class="theme-loader">
+    <div class="loader-track">
+      <div class="preloader-wrapper">
+        <div class="spinner-layer spinner-blue">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+        <div class="spinner-layer spinner-red">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+
+        <div class="spinner-layer spinner-yellow">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+
+        <div class="spinner-layer spinner-green">
+          <div class="circle-clipper left">
+            <div class="circle"></div>
+          </div>
+          <div class="gap-patch">
+            <div class="circle"></div>
+          </div>
+          <div class="circle-clipper right">
+            <div class="circle"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Pre-loader end -->
+  <section class="login-block">
+    <!-- Container-fluid starts -->
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12">
+          <form id="loginForm" class="md-float-material form-material" action="/login" method="POST">
+            <div class="text-center">
+              <img src="{{ url_for('static', filename='assets/images/Logo.png')}}" alt="logo_full.png" , style="max-width: 10%; max-height: 10%" />
+            </div>
+            <!-- Flash Message begins here -->
+            <div class="auth-box card">
+              {% if message %}
+              <div class="alert alert-danger" role="alert">{{message}}</div>
+              {% endif %}
+              <div class="card-block">
+                <div class="row m-b-20">
+                  <div class="col-md-12" style="padding-bottom: 3%">
+                    <h3 class="text-center txt-primary">Login</h3>
+                  </div>
+                  <!-- <div class="text-center">
+                    <img src="{{ url_for('static', filename='assets/images/diya.png')}}" alt="logo_full.png" , style="max-width: 15%; max-height: 15%" />
+                  </div> -->
+                </div>
+                <div class="form-group form-primary">
+                  <input id="email" type="email" name="email" class="form-control" required="" />
+                  <span class="form-bar"></span>
+                  <label class="float-label">Your Email Address</label>
+                  <message id="loading"></message>
+                </div>
+                <div class="form-group form-primary">
+                  <input id="password" type="password" name="password" class="form-control" required="" />
+                  <span class="form-bar"></span>
+                  <label class="float-label">Password</label>
+                </div>
+                <div class="field">
+                  <label class="checkbox">
+                    <input type="checkbox" , name="remember" />
+                    Remember me
+                  </label>
+                </div>
+                <div class="col-xl-0 form-group form-primary">
+                  <input id="csrf" type="hidden" name="csrf_token" class="form-control" value="{{csrf_token()}}" required="" />
+                  <!-- <label class="float-label">End Date</label> -->
+                </div>
+                <div class="row m-t-30">
+                  <div class="col-md-12">
+                    <button type="submit" class="btn btn-grd-primary btn-md btn-block waves-effect text-center m-b-20">Login now</button>
+                  </div>
+                </div>
+                <div class="col text-muted">
+                  <a href="{{url_for('auth.signup')}}">
+                    <p>
+                      If you don't have an account,
+                      <span class="text-primary">Sign Up Here.</span>
+                    </p>
+                  </a>
+                </div>
+                <div class="col text-muted">
+                  <a href="{{url_for('auth.forgotPassword')}}">
+                    <span class="text-primary">Forgot Password?</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </form>
+          <!-- <script type="text/javascript" src="{{ url_for('static', filename='assets/js/loginValidator.js')}}"></script> -->
+          <!-- <script type="text/javascript">
+                            $(document).ready(function(){
+                                var emailInput = document.getElementById('email')
+                                var loading = document.getElementById('loading')
+                                function emailCheck() {
+                                loading.textContent = "Rajat"
+                            }
+
+                            emailInput.addEventListener('input', emailCheck, false)
+                            })
+                           
+                            
+                            email = emailInput.value
+                            $(document).ready(function() {
+                                $("#email").on('input', function(e) {
+                                    $("#msg").hide();
+                                    $("#loading").hide();
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/email_check",
+                                        data = $("#loginForm").serialize(),
+                                        dataType: "html",
+                                        cache: false,
+                                        success: function(msg) {
+                                            $("#msg").show()
+                                            $("msg").html(msg)
+                                        },
+                                        error: function(jqXHR, textStatus, errorThrown){
+                                                $("#msg").show()
+                                                $("#msg").html(textStatus + " " + errorThrown)
+                                        }
+                
+                                    });
+                                });
+                            });
+                
+                        </script> -->
+        </div>
+        <!-- end of col-sm-12 -->
+      </div>
+      <!-- end of row -->
+    </div>
+    {% with messages = get_flashed_messages() %} {% if messages %}
+    <div class="popup">
+      <div class="text-center">
+        <script>
+          window.alert("{{ messages[0] }}");
+        </script>
+      </div>
+    </div>
+    {% endif %} {% endwith %}
+    <!-- end of container-fluid -->
+  </section>
+  <p class="text-center" style="color: dodgerblue; font-size: 15%">© PayMate 2021</p>
+
+  <!-- Warning Section Starts -->
+  <!-- Older IE warning message -->
+  <!--[if lt IE 10]>
+    <div class="ie-warning">
+      <h1>Warning!!</h1>
+      <p>
+        You are using an outdated version of Internet Explorer, please upgrade
+        <br />to any of the following web browsers to access this website.
+      </p>
+      <div class="iew-container">
+        <ul class="iew-download">
+          <li>
+            <a href="http://www.google.com/chrome/">
+              <img src="assets/images/browser/chrome.png" alt="Chrome" />
+              <div>Chrome</div>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.mozilla.org/en-US/firefox/new/">
+              <img src="assets/images/browser/firefox.png" alt="Firefox" />
+              <div>Firefox</div>
+            </a>
+          </li>
+          <li>
+            <a href="http://www.opera.com">
+              <img src="assets/images/browser/opera.png" alt="Opera" />
+              <div>Opera</div>
+            </a>
+          </li>
+          <li>
+            <a href="https://www.apple.com/safari/">
+              <img src="assets/images/browser/safari.png" alt="Safari" />
+              <div>Safari</div>
+            </a>
+          </li>
+          <li>
+            <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
+              <img src="assets/images/browser/ie.png" alt="" />
+              <div>IE (9 & above)</div>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <p>Sorry for the inconvenience!</p>
+    </div>
+  <![endif]-->
+  <!-- Warning Section Ends -->
+  <!-- Required Jquery -->
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery/jquery.min.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-ui/jquery-ui.min.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/popper.js/popper.min.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap/js/bootstrap.min.js')}}"></script>
+  <!-- waves js -->
+  <script src="{{ url_for('static', filename='assets/pages/waves/js/waves.min.js')}}"></script>
+  <!-- jquery slimscroll js -->
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-slimscroll/jquery.slimscroll.js')}} "></script>
+  <!-- modernizr js -->
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/SmoothScroll.js')}}"></script>
+  <script src="{{ url_for('static', filename='assets/js/jquery.mCustomScrollbar.concat.min.js')}} "></script>
+  <!-- i18next.min.js -->
+  <script type="text/javascript" src="{{ url_for('static', filename='bower_components/i18next/i18next.min.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='bower_components/i18next-xhr-backend/i18nextXHRBackend.min.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='bower_components/i18next-browser-languagedetector/i18nextBrowserLanguageDetector.min.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='bower_components/jquery-i18next/jquery-i18next.min.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/common-pages.js')}}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='assets/js/loginValidator.js')}}"></script>
+</body>
+
+<!-- </html> -->

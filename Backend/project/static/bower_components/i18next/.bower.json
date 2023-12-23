@@ -1,0 +1,15 @@
+{
+  "name": "i18next",
+  "homepage": "https://github.com/i18next/i18next",
+  "version": "20.2.4",
+  "_release": "20.2.4",
+  "_resolution": {
+    "type": "version",
+    "tag": "v20.2.4",
+    "commit": "05e6c8553e0cdcc54499eb0a7b85e68265f2dbc4"
+  },
+  "_source": "https://github.com/i18next/i18next.git",
+  "_target": "^20.2.4",
+  "_originalSource": "i18next",
+  "_direct": true
+}
