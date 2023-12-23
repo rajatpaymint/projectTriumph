@@ -3644,3 +3644,4 @@
 2023-12-23 22:29:23,675 INFO werkzeug Thread-242022 : 127.0.0.1 - - [23/Dec/2023 22:29:23] "POST /app/getMyTopics HTTP/1.1" 200 -
 2023-12-23 22:29:24,440 INFO werkzeug Thread-242023 : 127.0.0.1 - - [23/Dec/2023 22:29:24] "POST /app/getAllTopics HTTP/1.1" 200 -
 2023-12-23 22:34:39,893 INFO werkzeug Thread-242054 : 127.0.0.1 - - [23/Dec/2023 22:34:39] "POST /app/getMyTopics HTTP/1.1" 200 -
+2023-12-23 23:21:46,869 INFO werkzeug Thread-242521 : 127.0.0.1 - - [23/Dec/2023 23:21:46] "POST /app/login HTTP/1.1" 200 -
