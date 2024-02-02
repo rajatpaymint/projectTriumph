@@ -1,5 +1,5 @@
 import { useEffect, useState, useContext } from "react";
-import { Text, View, StyleSheet, TextInput, Button, Pressable } from "react-native";
+import { Text, View, StyleSheet, TextInput, Button, Pressable, Alert } from "react-native";
 import { Colors } from "../Constants/styles";
 import PrimaryButton from "./PrimaryButton";
 import axios from "axios";
@@ -27,11 +27,21 @@ function LoginForm() {
         email: email,
         password: password,
       });
-      console.log("Response Received: ", response.data);
-      authCtx.authenticate(response.data["token"]);
-      authCtx.setTokenExpiryContext(response.data["tokenExpiryTime"]);
-      authCtx.setUserIdContext(response.data["userId"]);
-      authCtx.setEmailContext(email);
+      if (response.data["statusCode"] != 0) {
+        Alert.alert("Oops", response.data["apiMessage"], [
+          {
+            text: "Ok",
+            style: "cancel",
+          },
+        ]);
+      } else {
+        authCtx.authenticate(response.data["token"]);
+        authCtx.setTokenExpiryContext(response.data["tokenExpiryTime"]);
+        authCtx.setUserIdContext(response.data["userId"]);
+        authCtx.setEmailContext(email);
+        authCtx.setCityContext(response.data["city"]);
+        authCtx.setNameContext(response.data["name"]);
+      }
     } catch (error) {
       console.log("Error: ", error);
     }
@@ -61,6 +71,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
   },
   emailInput: {
+    fontFamily: "OpenSans-Regular",
     width: "80%",
     color: "#545454",
   },

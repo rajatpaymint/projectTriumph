@@ -1,76 +1,64 @@
-import { View, Text, StyleSheet, Image, Dimensions, TextInput } from "react-native";
+import { View, Text, StyleSheet, Image, Dimensions, TextInput, Alert } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import { Ionicons } from "@expo/vector-icons";
 import PrimaryButton from "../components/PrimaryButton";
 import QuestionItem from "../components/QuestionItem";
-
-const questionData = [
-  {
-    id: 1,
-    question: "What is the meaning of pre and post money valuation?",
-    date: "23rd Sept 2023",
-    answer: "eaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post funding",
-  },
-  {
-    id: 2,
-    question: "What is the meaning of pre and post money valuation?",
-    date: "23rd Sept 2023",
-    answer: "eaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post funding",
-  },
-  {
-    id: 3,
-    question: "What is the meaning of pre and post money valuation?",
-    date: "23rd Sept 2023",
-    answer: "eaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post funding",
-  },
-  {
-    id: 4,
-    question: "What is the meaning of pre and post money valuation?",
-    date: "23rd Sept 2023",
-    answer: "eaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post funding",
-  },
-  {
-    id: 5,
-    question: "What is the meaning of pre and post money valuation?",
-    date: "23rd Sept 2023",
-    answer: "eaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post funding",
-  },
-  {
-    id: 6,
-    question: "What is the meaning of pre and post money valuation?",
-    date: "23rd Sept 2023",
-    answer: "eaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post funding",
-  },
-  {
-    id: 7,
-    question: "What is the meaning of pre and post money valuation?",
-    date: "23rd Sept 2023",
-    answer: "eaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post fundingeaning of pre and post funding",
-  },
-];
+import { useEffect, useState, useContext } from "react";
+import { askQuestion, getQuestions } from "../api/appApi";
+import { AuthContext } from "../Store/z2pContext";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 
 function MyQuestionScreen() {
-  function askQuestionInputHandler() {
-    console.log("Ask question pressed");
+  const authCtx = useContext(AuthContext);
+  const [data, setData] = useState();
+  const [question, setQuestion] = useState("");
+  const [message, setMessage] = useState("");
+
+  async function fetchQuestions() {
+    const response = await getQuestions(authCtx.userId);
+    setData(response["questionList"]);
   }
+
+  useEffect(() => {
+    fetchQuestions();
+  }, []);
+
+  function askQuestionInputHandler(text) {
+    setQuestion(text);
+  }
+
+  function askQuestionButton() {
+    async function askAQuestion() {
+      const response = await askQuestion(authCtx.userId, question);
+      setMessage(response["apiMessage"]);
+      Alert.alert("", response["apiMessage"], [
+        {
+          text: "Ok",
+          style: "cancel",
+        },
+      ]);
+      fetchQuestions();
+    }
+    askAQuestion();
+  }
+
   return (
     <View style={styles.screen}>
       <View style={styles.questionBoxOuterContainer}>
         <View style={styles.questionBox}>
           <TextInput style={styles.modalText} autoCapitalize="none" autoCorrect={false} onChangeText={askQuestionInputHandler} placeholder="Ask a question. Our experts will reply soon." placeholderTextColor="#545454" maxLength={500} multiline={true} />
           <View style={styles.buttonContainer}>
-            <PrimaryButton children={"Ask"} buttonPress={askQuestionInputHandler} />
+            <PrimaryButton children={"Ask"} buttonPress={askQuestionButton} />
           </View>
         </View>
       </View>
       <View style={styles.recentQuestionsOuterContainer}>
         <Text style={{ paddingLeft: 10, fontSize: 18, borderBottomWidth: 1, borderBottomColor: "#D9D9D9" }}>Recent Question</Text>
       </View>
-      <View>
-        <FlatList data={questionData} renderItem={(itemData) => <QuestionItem question={itemData.item.question} date={itemData.item.date} answer={itemData.item.answer} />} keyExtractor={(item) => item.id.toString()} />
+      <View style={styles.flatlistContainer}>
+        <FlatList data={data} renderItem={(itemData) => <QuestionItem question={itemData.item.question} date={itemData.item.createdTime} answer={itemData.item.answer} />} keyExtractor={(item) => item.questionId.toString()} />
       </View>
     </View>
   );
@@ -109,5 +97,8 @@ const styles = StyleSheet.create({
   recentQuestionsOuterContainer: {
     backgroundColor: "white",
     marginBottom: 10,
+  },
+  flatlistContainer: {
+    flex: 1,
   },
 });

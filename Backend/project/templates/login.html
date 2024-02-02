@@ -129,10 +129,6 @@
                     Remember me
                   </label>
                 </div>
-                <div class="col-xl-0 form-group form-primary">
-                  <input id="csrf" type="hidden" name="csrf_token" class="form-control" value="{{csrf_token()}}" required="" />
-                  <!-- <label class="float-label">End Date</label> -->
-                </div>
                 <div class="row m-t-30">
                   <div class="col-md-12">
                     <button type="submit" class="btn btn-grd-primary btn-md btn-block waves-effect text-center m-b-20">Login now</button>
@@ -154,44 +150,6 @@
               </div>
             </div>
           </form>
-          <!-- <script type="text/javascript" src="{{ url_for('static', filename='assets/js/loginValidator.js')}}"></script> -->
-          <!-- <script type="text/javascript">
-                            $(document).ready(function(){
-                                var emailInput = document.getElementById('email')
-                                var loading = document.getElementById('loading')
-                                function emailCheck() {
-                                loading.textContent = "Rajat"
-                            }
-
-                            emailInput.addEventListener('input', emailCheck, false)
-                            })
-                           
-                            
-                            email = emailInput.value
-                            $(document).ready(function() {
-                                $("#email").on('input', function(e) {
-                                    $("#msg").hide();
-                                    $("#loading").hide();
-                                    $.ajax({
-                                        type: "POST",
-                                        url: "/email_check",
-                                        data = $("#loginForm").serialize(),
-                                        dataType: "html",
-                                        cache: false,
-                                        success: function(msg) {
-                                            $("#msg").show()
-                                            $("msg").html(msg)
-                                        },
-                                        error: function(jqXHR, textStatus, errorThrown){
-                                                $("#msg").show()
-                                                $("#msg").html(textStatus + " " + errorThrown)
-                                        }
-                
-                                    });
-                                });
-                            });
-                
-                        </script> -->
         </div>
         <!-- end of col-sm-12 -->
       </div>
@@ -208,55 +166,8 @@
     {% endif %} {% endwith %}
     <!-- end of container-fluid -->
   </section>
-  <p class="text-center" style="color: dodgerblue; font-size: 15%">© PayMate 2021</p>
+  <p class="text-center" style="color: dodgerblue; font-size: 15%">© Z2P 2023</p>
 
-  <!-- Warning Section Starts -->
-  <!-- Older IE warning message -->
-  <!--[if lt IE 10]>
-    <div class="ie-warning">
-      <h1>Warning!!</h1>
-      <p>
-        You are using an outdated version of Internet Explorer, please upgrade
-        <br />to any of the following web browsers to access this website.
-      </p>
-      <div class="iew-container">
-        <ul class="iew-download">
-          <li>
-            <a href="http://www.google.com/chrome/">
-              <img src="assets/images/browser/chrome.png" alt="Chrome" />
-              <div>Chrome</div>
-            </a>
-          </li>
-          <li>
-            <a href="https://www.mozilla.org/en-US/firefox/new/">
-              <img src="assets/images/browser/firefox.png" alt="Firefox" />
-              <div>Firefox</div>
-            </a>
-          </li>
-          <li>
-            <a href="http://www.opera.com">
-              <img src="assets/images/browser/opera.png" alt="Opera" />
-              <div>Opera</div>
-            </a>
-          </li>
-          <li>
-            <a href="https://www.apple.com/safari/">
-              <img src="assets/images/browser/safari.png" alt="Safari" />
-              <div>Safari</div>
-            </a>
-          </li>
-          <li>
-            <a href="http://windows.microsoft.com/en-us/internet-explorer/download-ie">
-              <img src="assets/images/browser/ie.png" alt="" />
-              <div>IE (9 & above)</div>
-            </a>
-          </li>
-        </ul>
-      </div>
-      <p>Sorry for the inconvenience!</p>
-    </div>
-  <![endif]-->
-  <!-- Warning Section Ends -->
   <!-- Required Jquery -->
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery/jquery.min.js')}}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-ui/jquery-ui.min.js')}}"></script>

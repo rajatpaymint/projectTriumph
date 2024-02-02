@@ -26,6 +26,7 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   buttonText: {
+    fontFamily: "OpenSans-SemiBold",
     color: "white",
     textAlign: "center",
   },

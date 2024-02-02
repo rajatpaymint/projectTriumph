@@ -1,0 +1,317 @@
+<nav class="pcoded-navbar">
+  <div class="sidebar_toggle">
+    <a href="#"><i class="icon-close icons"></i></a>
+  </div>
+  <div class="pcoded-inner-navbar main-menu">
+    <div class="">
+      <div class="main-menu-header">
+        <div class="user-details">
+          <p style="color: aliceblue; font-size: 100%">Z2P</p>
+          <span id="more-details">Rajat<i class="fa fa-caret-down"></i></span>
+        </div>
+      </div>
+    </div>
+    <p></p>
+    <ul class="pcoded-item pcoded-left-item">
+      <li class="{% if request.endpoint.split('.')[1] == 'index' %} active {% else %} {% endif %}">
+        <a href="{{url_for('main.index')}}" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+          <span class="pcoded-mtext" data-i18n="nav.dash.main">Dashboard</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+
+      <li class="{% if request.endpoint.split('.')[1] == 'addNews' %} active {% else %} {% endif %}">
+        <a href="{{url_for('main.addNews')}}" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+          <span class="pcoded-mtext" data-i18n="nav.dash.main">Add News</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+
+      <li class="{% if request.endpoint.split('.')[1] == 'addArticle' %} active {% else %} {% endif %}">
+        <a href="{{url_for('main.addArticle')}}" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+          <span class="pcoded-mtext" data-i18n="nav.dash.main">Add Article</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+
+      <li class="{% if request.endpoint.split('.')[1] == 'askExpert' %} active {% else %} {% endif %}">
+        <a href="{{url_for('main.askExpert')}}" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+          <span class="pcoded-mtext" data-i18n="nav.dash.main">Ask an Expert</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+      <li class="{% if request.endpoint.split('.')[1] == 'addEvent' %} active {% else %} {% endif %}">
+        <a href="{{url_for('main.addEvent')}}" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+          <span class="pcoded-mtext" data-i18n="nav.dash.main">Add Event</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+
+      <li class="pcoded-hasmenu">
+        <a href="javascript:void(0)" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
+          <span class="pcoded-mtext" data-i18n="nav.basic-components.main">Segregations</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'card' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Card</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+
+          <li class="{% if request.endpoint.split('.')[1] == 'merchantGst' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.breadcrumbs">Tax - GST/Direct</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+
+          <li class="{% if request.endpoint.split('.')[1] == 'newMerchant' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.breadcrumbs">New Merchants</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'channelPartner' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Issuing Bank</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'pg' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.breadcrumbs">PG</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'merchantVendors' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Vendor Data</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'merPerfomance' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Merchant Performance</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'salesReport' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Sales</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'mdrHistory' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">MDR History</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="pcoded-hasmenu">
+        <a href="javascript:void(0)" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
+          <span class="pcoded-mtext" data-i18n="nav.basic-components.main">Transactions</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'successTransaction' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Transactions-PMX</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'transactionsAirlines' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Transactions-Airlines</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'transactionsCab' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Transactions-Cab</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'transactionsMobile' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Transactions-Mobile</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'transactionsIcici' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Transactions-ICICI</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'transactionsUAE' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Transactions-UAE</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'merchantLedger' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Merchant Ledger(Daily)</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'merchantLedgerMonthly' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Merchant Ledger(Monthly)</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="pcoded-hasmenu">
+        <a href="javascript:void(0)" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
+          <span class="pcoded-mtext" data-i18n="nav.basic-components.main">Reports</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'cardTokenisation' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Tokenised Cards</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'businessWiseTokenisedCards' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">B Wise Tokenised Cards</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'moduleReport' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Module Report</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'masterData' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Master Data</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'regionalPlan' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Regional Plan</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="pcoded-hasmenu">
+        <a href="javascript:void(0)" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
+          <span class="pcoded-mtext" data-i18n="nav.basic-components.main">Payment Advice</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'paIndigo' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Indigo</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'paGoAir' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Go Air</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'paAirAsia' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">AirAsia</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+      </li>
+
+      <li class="pcoded-hasmenu">
+        <a href="javascript:void(0)" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-layout-grid2-alt"></i></span>
+          <span class="pcoded-mtext" data-i18n="nav.basic-components.main">Admin</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+        <ul class="pcoded-submenu">
+          <li class="{% if request.endpoint.split('.')[1] == 'mPDataInsert' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Update Monthly P&L</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'users' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Manage Users</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+          <li class="{% if request.endpoint.split('.')[1] == 'weeklyAlert' %} active {% else %} {% endif %}">
+            <a href="" class="waves-effect waves-dark">
+              <span class="pcoded-micon"><i class="ti-angle-right"></i></span>
+              <span class="pcoded-mtext" data-i18n="nav.basic-components.alert">Weekly Alerts</span>
+              <span class="pcoded-mcaret"></span>
+            </a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>

@@ -1,8 +1,15 @@
-import { Text, View, StyleSheet, ImageBackground } from "react-native";
+import { Text, View, StyleSheet, ImageBackground, Pressable } from "react-native";
 import { Colors } from "../Constants/styles";
 import LoginForm from "../components/LoginForm";
 
-function LoginScreen() {
+function LoginScreen({ navigation }) {
+  function signupHereHandler() {
+    console.log("Signup Pressed");
+    navigation.navigate("Signup");
+  }
+  function forgotPasswordHandler() {
+    console.log("forgotPasswordHandler");
+  }
   return (
     <ImageBackground source={require("../assets/images/background.png")} resizeMode="cover" style={styles.rootScreen} imageStyle={styles.backgroundImage}>
       <View style={styles.rootScreen}>
@@ -11,11 +18,16 @@ function LoginScreen() {
             <Text style={styles.title}>Login</Text>
           </View>
           <LoginForm />
-          <View>
-            <Text>Line</Text>
+          <View style={styles.signupLineBox}>
+            <Text style={{ fontFamily: "OpenSans-Regular" }}>Not a user yet?</Text>
+            <Pressable onPress={signupHereHandler}>
+              <Text style={{ marginLeft: 5, color: Colors.primary800, fontFamily: "OpenSans-Bold" }}>SignUp Here</Text>
+            </Pressable>
           </View>
-          <View>
-            <Text>SSO Sign in</Text>
+          <View style={styles.signupLineBox}>
+            <Pressable onPress={forgotPasswordHandler}>
+              <Text style={{ marginLeft: 5, color: Colors.primary800, fontFamily: "OpenSans-Bold" }}>Forgot Password</Text>
+            </Pressable>
           </View>
         </View>
       </View>
@@ -46,7 +58,13 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   title: {
+    fontFamily: "OpenSans-Medium",
     fontSize: 24,
     color: "#545454",
+  },
+  signupLineBox: {
+    flexDirection: "row",
+    marginTop: 10,
+    marginBottom: 5,
   },
 });

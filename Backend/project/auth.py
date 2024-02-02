@@ -135,7 +135,7 @@ def logout():
     session.pop('usdToINR',None)
     session.pop('aedToINR',None)
     session.pop('userVerification',None)
-    session.pop('csrf_token',None)
+    # session.pop('csrf_token',None)
     session.pop('_permanent',None)
  
     return redirect(url_for('auth.login'))

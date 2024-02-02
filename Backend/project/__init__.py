@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_wtf.csrf import CSRFProtect
+from flask_cors import CORS
 # from flask_apscheduler import APScheduler
 
 deployment_type = "local"
@@ -8,8 +8,7 @@ deployment_type = "local"
 
 #def create_app():
 app = Flask(__name__, static_folder='static')
-csrf = CSRFProtect(app)
-#CORS(app)
+CORS(app)
 
 if deployment_type == "prod":
     app.config.from_object('config.configProd')
@@ -24,7 +23,6 @@ if deployment_type == "prod":
     from apiMain import apiMain as apiMain
     app.register_blueprint(apiMain)
 
-    csrf.exempt(apiMain)
 
 
 else:
@@ -38,12 +36,10 @@ else:
     app.register_blueprint(auth_blueprint)
     # blueprint for non-auth parts of app
     from .main import main as main_blueprint
-    app .register_blueprint(main_blueprint)
+    app.register_blueprint(main_blueprint)
 
     from .apiMain import apiMain as apiMain
     app.register_blueprint(apiMain)
-
-    csrf.exempt(apiMain)
 
 #return app
 if __name__ == '__main__':

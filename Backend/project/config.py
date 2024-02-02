@@ -50,15 +50,6 @@ class configLocal(config):
     PASSWORD_LOCAL="MyPass@word"
     DB_LOCAL = "projectTriumph"
 
-    PMX_SERVER = "PMX3.0"
-    ONECLICK_SERVER = "Oneclickpay_OTF"
-    CCDB_SERVER = "PayMateCCDB_dev"
-    PMCORP_SERVER = "PMCorporate_Local"
-    SFACORP_SERVER = "SFACorporate"
-    PGSTACK_SERVER = "PGStackUAT"
-    PAYMATE_MARKETPLACE_SERVER = "IDM_MarketPlace"
-    PAYMATE_AAIARLINE = "AAIairline"
-
     SERVER = "192.168.2.4\\UATDB2008"
     PORT = "1310"
     USER = "Citadel"
