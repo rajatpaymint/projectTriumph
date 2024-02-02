@@ -1,0 +1,351 @@
+{% extends "layoutTop.html" %} {% block content %}
+<!-- Pre-loader start -->
+<div class="theme-loader">
+  <div class="loader-track">
+    <div class="preloader-wrapper">
+      <div class="spinner-layer spinner-blue">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+      <div class="spinner-layer spinner-red">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-yellow">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+
+      <div class="spinner-layer spinner-green">
+        <div class="circle-clipper left">
+          <div class="circle"></div>
+        </div>
+        <div class="gap-patch">
+          <div class="circle"></div>
+        </div>
+        <div class="circle-clipper right">
+          <div class="circle"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Pre-loader end -->
+<div id="pcoded" class="pcoded">
+  <div class="pcoded-overlay-box"></div>
+  <div class="pcoded-container navbar-wrapper">
+    <nav class="navbar header-navbar pcoded-header">
+      <div class="navbar-wrapper">
+        <div class="navbar-logo">
+          <a class="mobile-menu waves-effect waves-light" id="mobile-collapse" href="#!">
+            <i class="ti-menu"></i>
+          </a>
+          <!-- <div class="mobile-search waves-effect waves-light">
+                          <div class="header-search">
+                              <div class="main-search morphsearch-search">
+                                  <div class="input-group">
+                                      <span class="input-group-addon search-close"><i class="ti-close"></i></span>
+                                      <input type="text" class="form-control" placeholder="Enter Keyword">
+                                      <span class="input-group-addon search-btn"><i class="ti-search"></i></span>
+                                  </div>
+                              </div>
+                          </div>
+                      </div> -->
+          <a href="{{url_for('main.index')}}">
+            <img class="img-fluid" src="{{ url_for('static', filename='assets/images/Logo.png')}}" alt="Theme-Logo" width="20%" height="auto" />
+          </a>
+          <a class="mobile-options waves-effect waves-light">
+            <i class="ti-more"></i>
+          </a>
+        </div>
+
+        <div class="navbar-container container-fluid">
+          <ul class="nav-left">
+            <li>
+              <div class="sidebar_toggle">
+                <a href="javascript:void(0)"><i class="ti-menu"></i></a>
+              </div>
+            </li>
+            <li>
+              <a href="#!" onclick="javascript:toggleFullScreen()" class="waves-effect waves-light">
+                <i class="ti-fullscreen"></i>
+              </a>
+            </li>
+          </ul>
+          <ul class="nav-right">
+            <li class="user-profile header-notification">
+              <a href="#!" class="waves-effect waves-light">
+                <span>Rajat</span>
+                <i class="ti-angle-down"></i>
+              </a>
+              <ul class="show-notification profile-notification">
+                <li class="waves-effect waves-light">
+                  <a href="{{url_for('auth.logout')}}"> <i class="ti-layout-sidebar-left"></i>Logout </a>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+
+    <div class="pcoded-main-container">
+      <div class="pcoded-wrapper">
+        {% include 'sidebar.html' %}
+        <div class="pcoded-content">
+          <!-- Page-header start -->
+          <div class="page-header">
+            <div class="page-block">
+              <div class="row align-items-center">
+                <div class="col-md-8">
+                  <div class="page-header-title">
+                    <h5 class="m-b-10">Add News</h5>
+                    <p class="m-b-0">Hi Rajat, welcome to Z2P Dashboard!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Page-header end -->
+          <div class="pcoded-inner-content">
+            <!-- Main-body start -->
+            <div class="main-body">
+              <div class="page-wrapper">
+                <!-- Page-body start -->
+                <div class="page-body">
+                  <div class="col-xl-12 col-md-6">
+                    <div class="row align-items-center">
+                      <div class="col-sm-12">
+                        <form enctype="multipart/form-data" id="addNewsForm" class="md-float-material form-material" action="/addNews" method="POST">
+                          <div class="auth-box card">
+                            <div class="card-block">
+                              <div class="row m-b-20">
+                                <div class="col-md-12">
+                                  <h3 class="text-center txt-primary">Add News</h3>
+                                </div>
+                              </div>
+                              <div class="form-group form-primary">
+                                <input id="keywords" type="text" name="keywords" class="form-control" required="" />
+                                <span class="form-bar"></span>
+                                <label class="float-label">Keywords(comma separated)</label>
+                              </div>
+                              <div class="form-group form-primary">
+                                <input id="imageFile" type="file" name="imageFile" class="form-control" required="" accept="image/*" />
+                                <span class="form-bar"></span>
+                                <label class="float-label" style="margin-top: 30px">Upload Image</label>
+                              </div>
+                              <div class="form-group form-primary">
+                                <input id="headline" type="text" name="headline" class="form-control" required="" />
+                                <span class="form-bar"></span>
+                                <label class="float-label">Headline</label>
+                              </div>
+                              <div class="form-group form-primary">
+                                <input id="summary" type="text" name="summary" class="form-control" required="" />
+                                <span class="form-bar"></span>
+                                <label class="float-label">Summary</label>
+                              </div>
+                              <div class="form-group form-primary">
+                                <input id="articleLink" type="text" name="articleLink" class="form-control" required="" />
+                                <span class="form-bar"></span>
+                                <label class="float-label">Article Link</label>
+                              </div>
+                              <div class="form-group form-primary">
+                                <input id="location" type="text" name="location" class="form-control" required="" />
+                                <span class="form-bar"></span>
+                                <label class="float-label">Location(City)</label>
+                              </div>
+                              <div class="form-group form-primary">
+                                <select id="topic" name="topic" class="form-control" required>
+                                  <option value="">Select Topic</option>
+                                  <option value="">None</option>
+                                  {% for row in topicList%}
+                                  <option value="{{row[0]}}">{{row[1]}}</option>
+                                  {% endfor %}
+                                  <!-- Add more options as needed -->
+                                </select>
+                                <span class="form-bar"></span>
+                              </div>
+                              <div class="row m-t-30">
+                                <div class="col-md-4"></div>
+                                <div id="id1" class="col-md-4">
+                                  <button type="submit" class="btn btn-grd-primary btn-md btn-block waves-effect text-center m-b-20">Add News</button>
+                                </div>
+                                <div class="col-md-4"></div>
+                              </div>
+                            </div>
+                          </div>
+                        </form>
+                      </div>
+                      <div class="col-xl-12 col-md-12">
+                        <div class="card">
+                          <div class="card-header">
+                            <div class="row">
+                              <div class="col-xl-4">
+                                <h4>App User List</h4>
+                                <div class="text-muted">Data from: {{date1}} to {{date2}}</div>
+                              </div>
+                              <div class="col-xl-8 text-right">
+                                <button onclick="ExportToExcel1('xlsx')">Export</button>
+                                <button id="buttonTC1">Sum</button>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="card-block table-border-style">
+                            <div class="table-responsive">
+                              <table id="table1" class="table">
+                                <thead>
+                                  <tr>
+                                    <th>newsId</th>
+                                    <th class="calc">createdDate</th>
+                                    <th class="calc">keywords</th>
+                                    <th class="calc">imageLink</th>
+                                    <th class="calc">headline</th>
+                                    <th class="calc">summary</th>
+                                    <th class="calc">articleLink</th>
+                                    <th class="calc">location</th>
+                                    <th class="calc">topicId</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  {% for row in newsList %}
+                                  <tr>
+                                    <td style="color: rgb(25, 105, 197)">{{row[0]}}</td>
+                                    <td>{{row[1]}}</td>
+                                    <td>{{row[3]}}</td>
+                                    <td style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"><a href="{{ row[4] }}" target="_blank">{{row[4]}}</a></td>
+                                    <td>{{row[5]}}</td>
+                                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap" onclick="toggleSummary(this)">{{row[6]}}</td>
+                                    <td style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"><a href="{{ row[7] }}" target="_blank">{{row[7]}}</a></td>
+                                    <td>{{row[8]}}</td>
+                                    <td>{{row[9]}}</td>
+                                  </tr>
+                                  {% endfor %}
+                                </tbody>
+                              </table>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <!-- Page-body end -->
+              </div>
+              <div id="styleSelector"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Required Jquery -->
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery/jquery.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-ui/jquery-ui.min.js')}} "></script>
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/popper.js/popper.min.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/bootstrap/js/bootstrap.min.js')}} "></script>
+<script type="text/javascript" src="{{ url_for('static', filename='assets/pages/widget/excanvas.js')}} "></script>
+<!-- waves js -->
+<script src="{{ url_for('static', filename='assets/pages/waves/js/waves.min.js')}}"></script>
+<!-- jquery slimscroll js -->
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/jquery-slimscroll/jquery.slimscroll.js')}} "></script>
+<!-- modernizr js -->
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/modernizr/modernizr.js')}} "></script>
+<!-- slimscroll js -->
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/SmoothScroll.js')}}"></script>
+<script src="{{ url_for('static', filename='assets/js/jquery.mCustomScrollbar.concat.min.js')}} "></script>
+<!-- Chart js -->
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/chart.js/Chart.js')}}"></script>
+<!-- amchart js -->
+<script src="https://www.amcharts.com/lib/3/amcharts.js"></script>
+<script src="{{ url_for('static', filename='assets/pages/widget/amchart/gauge.js')}}"></script>
+<script src="{{ url_for('static', filename='assets/pages/widget/amchart/serial.js')}}"></script>
+<script src="{{ url_for('static', filename='assets/pages/widget/amchart/light.js')}}"></script>
+<script src="{{ url_for('static', filename='assets/pages/widget/amchart/pie.min.js')}}"></script>
+<script src="https://www.amcharts.com/lib/3/plugins/export/export.min.js"></script>
+<!-- menu js -->
+<script src="{{ url_for('static', filename='assets/js/pcoded.min.js')}}"></script>
+<script src="{{ url_for('static', filename='assets/js/vertical-layout.min.js')}} "></script>
+<!-- custom js -->
+<script type="text/javascript" src="{{ url_for('static', filename='assets/pages/dashboard/custom-dashboard.js')}}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='assets/js/script.js')}} "></script>
+
+<!-- Paging JS -->
+<!-- <script type="text/javascript" src="{{ url_for('static', filename='assets/js/paging.js')}}"></script> 
+    <script type="text/javascript">
+                $(document).ready(function() {
+                    $('#invoiceTable').paging({limit:20});
+                });
+    </script> -->
+<!-- Table Styling -->
+<script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='assets/DataTables/datatables.js')}}"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#table1").DataTable();
+    $("#table2").DataTable();
+  });
+</script>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script type="text/javascript">
+  function ExportToExcel1(type, fn, dl) {
+    var elt = document.getElementById("table1");
+    var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+    return dl ? XLSX.write(wb, { bookType: type, bookSST: true, type: "base64" }) : XLSX.writeFile(wb, fn || "misMerchantGst." + (type || "xlsx"));
+  }
+</script>
+<script type="text/javascript" src="https://unpkg.com/xlsx@0.15.1/dist/xlsx.full.min.js"></script>
+<script type="text/javascript">
+  function ExportToExcel2(type, fn, dl) {
+    var elt = document.getElementById("table2");
+    var wb = XLSX.utils.table_to_book(elt, { sheet: "sheet1" });
+    return dl ? XLSX.write(wb, { bookType: type, bookSST: true, type: "base64" }) : XLSX.writeFile(wb, fn || "misMerchantsDirectTax." + (type || "xlsx"));
+  }
+</script>
+<!-- Table Summation -->
+<script type="text/javascript" charset="utf8" src="{{ url_for('static', filename='assets/js/summation/summation.js')}}"></script>
+<script>
+  $(document).ready(function () {
+    summation("#table1", "#buttonTC1");
+    summation("#table2", "#buttonTC2");
+  });
+</script>
+<script>
+  function toggleSummary(td) {
+    if (td.style.whiteSpace === "nowrap") {
+      // Expand
+      td.style.whiteSpace = "normal";
+      td.style.overflow = "visible";
+      td.style.textOverflow = "clip";
+    } else {
+      // Collapse
+      td.style.whiteSpace = "nowrap";
+      td.style.overflow = "hidden";
+      td.style.textOverflow = "ellipsis";
+    }
+  }
+</script>
+
+{% endblock %}

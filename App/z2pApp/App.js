@@ -1,46 +1,58 @@
 import "react-native-gesture-handler";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import SignupScreen from "./Screens/SignupScreen";
 import { Colors } from "./Constants/styles";
 import AuthContextProvider, { AuthContext } from "./Store/z2pContext";
-import { useContext } from "react";
+import { useContext, useState, useEffect } from "react";
 import LoginScreen from "./Screens/LoginScreen";
-import TopicsScreen from "./Screens/TopicsScreen";
-import CardStack from "./Screens/CardStack";
-import InShortsClone from "./Screens/InShortClone";
 import NewsMain from "./Screens/NewsMain";
 import Headlines from "./Screens/Headlines";
 import MyQuestionScreen from "./Screens/MyQuestionScreen";
-import PostFeed from "./Screens/PostFeed";
 import MyFeed from "./Screens/MyFeed";
-import SvgUri from "react-native-svg-uri";
 import NewsLetter from "./Screens/NewsLetter";
 import Database from "./Screens/Database";
-import FindJob from "./Screens/FindJob";
-import PostJob from "./Screens/PostJob";
 import ResourceCenter from "./Screens/ResourceCenter";
 import Profile from "./Screens/Profile";
 import StartupEvents from "./Screens/StartupEvents";
+import NewTopicsScreen from "./Screens/NewTopicsScreen";
+import NewsletterSingle from "./Screens/NewsletterSingle";
+import LocationPin from "./components/LocationPin";
+import SingleStartupScreen from "./Screens/SingleStartupScreen";
+import Image from "react-native-remote-svg";
+import Webpage from "./Screens/Webpage";
+import SingleNewsScreen from "./Screens/SingleNewsScreen";
+import TopicNews from "./Screens/TopicNews";
+import { useFonts } from "expo-font";
+import SplashScreen from "./Screens/SplashScreen";
+import InvestorDirectory from "./Screens/InvestorDirectory";
+import StartupServices from "./Screens/StartupServices";
+import IncubatorScreen from "./Screens/IncubatorScreen";
+import PitchMaking from "./Screens/PitchMaking";
+import FinancialModelling from "./Screens/FinancialModelling";
+import InvestorTermsheet from "./Screens/InvestorTermsheet";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const DrawerNewsIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/newspaper.svg")} />;
-const DrawerHeadlinesIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/list-items.svg")} />;
-const DrawerAskIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/ask-me.svg")} />;
-const DrawerFeedIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/shuttle.svg")} />;
-const DrawerNewsletterIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/vip-card.svg")} />;
-const DrawerDatabaserIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/folders.svg")} />;
-const DrawerTopicIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/category.svg")} />;
-const DrawerFindJobIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/job.svg")} />;
-const DrawerPostJobIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/postJob.svg")} />;
-const DrawerResourceIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/resource.svg")} />;
-const DrawerProfileIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/profile.svg")} />;
-const DrawerEventsIcon = () => <SvgUri width="30" height="30" source={require("./assets/images/events.svg")} />;
+const DrawerNewsIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/newspaper.svg")} />;
+const DrawerHeadlinesIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/list-items.svg")} />;
+const DrawerAskIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/ask-me.svg")} />;
+const DrawerFeedIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/shuttle.svg")} />;
+const DrawerNewsletterIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/vip-card.svg")} />;
+const DrawerDatabaserIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/folders.svg")} />;
+const DrawerTopicIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/category.svg")} />;
+const DrawerFindJobIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/job.svg")} />;
+const DrawerPostJobIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/postJob.svg")} />;
+const DrawerResourceIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/resource.svg")} />;
+const DrawerProfileIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/profile.svg")} />;
+const DrawerEventsIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/events.svg")} />;
+const DrawerInvestorIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/investor.svg")} />;
+const DrawerServicesIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/consultancy.svg")} />;
+const DrawerOfficeIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/office.svg")} />;
 
 function AuthStack() {
   return (
@@ -56,10 +68,10 @@ function AuthStack() {
   );
 }
 
-function AuthenticatedStack() {
+function AuthenticatedDrawerStack() {
   return (
     <Drawer.Navigator
-      initialRouteName="MyFeed"
+      initialRouteName="NewsLetter"
       screenOptions={{
         drawerActiveBackgroundColor: Colors.primary500,
         drawerActiveTintColor: "white",
@@ -79,9 +91,21 @@ function AuthenticatedStack() {
         component={NewsLetter}
         options={{
           title: "Premium Articles",
-          headerTitle: "Articles",
+          headerTitle: "Z2P Premium",
           backgroundColor: "white",
           drawerIcon: () => <DrawerNewsletterIcon />,
+          unmountOnBlur: true,
+        }}
+      />
+      <Drawer.Screen
+        name="StartupServices"
+        component={StartupServices}
+        options={{
+          title: "Startup Services",
+          headerTitle: "Startup Services",
+          backgroundColor: "white",
+          drawerIcon: () => <DrawerServicesIcon />,
+          unmountOnBlur: true,
         }}
       />
       <Drawer.Screen
@@ -91,6 +115,7 @@ function AuthenticatedStack() {
           title: "News",
           backgroundColor: "white",
           drawerIcon: () => <DrawerNewsIcon />,
+          unmountOnBlur: true,
         }}
       />
       <Drawer.Screen
@@ -100,15 +125,17 @@ function AuthenticatedStack() {
           title: "Headlines",
           backgroundColor: "white",
           drawerIcon: () => <DrawerHeadlinesIcon />,
+          unmountOnBlur: true,
         }}
       />
       <Drawer.Screen
         name="Topics"
-        component={TopicsScreen}
+        component={NewTopicsScreen}
         options={{
-          title: "Topics",
+          title: "Startup Sectors",
           backgroundColor: "white",
           drawerIcon: () => <DrawerTopicIcon />,
+          unmountOnBlur: true,
         }}
       />
       <Drawer.Screen
@@ -118,6 +145,7 @@ function AuthenticatedStack() {
           title: "Ask an Expert",
           backgroundColor: "white",
           drawerIcon: () => <DrawerAskIcon />,
+          unmountOnBlur: true,
         }}
       />
       <Drawer.Screen
@@ -128,33 +156,28 @@ function AuthenticatedStack() {
           headerTitle: "Events",
           backgroundColor: "white",
           drawerIcon: () => <DrawerEventsIcon />,
-        }}
-      />
-      {/* <Drawer.Screen
-        name="FindJob"
-        component={FindJob}
-        options={{
-          title: "Find a Job",
-          backgroundColor: "white",
-          drawerIcon: () => <DrawerFindJobIcon />,
+          headerRight: () => <LocationPin />,
+          unmountOnBlur: true,
         }}
       />
       <Drawer.Screen
-        name="PostJob"
-        component={PostJob}
+        name="InvestorDirectory"
+        component={InvestorDirectory}
         options={{
-          title: "Post a Job",
+          title: "Investor Directory",
           backgroundColor: "white",
-          drawerIcon: () => <DrawerPostJobIcon />,
+          drawerIcon: () => <DrawerInvestorIcon />,
+          unmountOnBlur: true,
         }}
-      /> */}
+      />
       <Drawer.Screen
-        name="Database"
-        component={Database}
+        name="Incubator"
+        component={IncubatorScreen}
         options={{
-          title: "Startup Database",
+          title: "Incubator & Accelerators",
           backgroundColor: "white",
-          drawerIcon: () => <DrawerDatabaserIcon />,
+          drawerIcon: () => <DrawerOfficeIcon />,
+          unmountOnBlur: true,
         }}
       />
       <Drawer.Screen
@@ -164,6 +187,7 @@ function AuthenticatedStack() {
           title: "Resource Center",
           backgroundColor: "white",
           drawerIcon: () => <DrawerResourceIcon />,
+          unmountOnBlur: true,
         }}
       />
       <Drawer.Screen
@@ -175,15 +199,64 @@ function AuthenticatedStack() {
           drawerIcon: () => <DrawerProfileIcon />,
         }}
       />
-      <Drawer.Screen
-        name="PostFeed"
-        component={PostFeed}
+    </Drawer.Navigator>
+  );
+}
+
+function AuthenticatedStack() {
+  return (
+    <Stack.Navigator initialRouteName="AuthenticatedDrawerStack">
+      <Stack.Screen name="AuthenticatedDrawerStack" component={AuthenticatedDrawerStack} options={{ headerShown: false }} />
+      <Stack.Screen
+        name="NewsletterSingle"
+        component={NewsletterSingle}
         options={{
-          title: "Post",
-          backgroundColor: "white",
+          title: "",
         }}
       />
-    </Drawer.Navigator>
+      <Stack.Screen
+        name="Webpage"
+        component={Webpage}
+        options={{
+          title: "",
+        }}
+      />
+      <Stack.Screen
+        name="SingleNewsScreen"
+        component={SingleNewsScreen}
+        options={{
+          title: "",
+        }}
+      />
+      <Stack.Screen
+        name="TopicNews"
+        component={TopicNews}
+        options={{
+          title: "",
+        }}
+      />
+      <Stack.Screen
+        name="PitchMaking"
+        component={PitchMaking}
+        options={{
+          title: "Pitch Making",
+        }}
+      />
+      <Stack.Screen
+        name="FinancialModelling"
+        component={FinancialModelling}
+        options={{
+          title: "Financial Modelling",
+        }}
+      />
+      <Stack.Screen
+        name="InvestorTermsheet"
+        component={InvestorTermsheet}
+        options={{
+          title: "Investor Termsheet",
+        }}
+      />
+    </Stack.Navigator>
   );
 }
 
@@ -199,6 +272,25 @@ function Navigation() {
 }
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    "OpenSans-Light": require("./assets/fonts/OpenSans-Light.ttf"),
+    "OpenSans-Regular": require("./assets/fonts/OpenSans-Regular.ttf"),
+    "OpenSans-Medium": require("./assets/fonts/OpenSans-Medium.ttf"),
+    "OpenSans-SemiBold": require("./assets/fonts/OpenSans-SemiBold.ttf"),
+    "OpenSans-Bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+  });
+  const [splashLoading, setSplashLoading] = useState(true);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setSplashLoading(false);
+    }, 200); // Adjust the time as needed
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (!fontsLoaded || splashLoading) {
+    return <SplashScreen />;
+  }
   return (
     <>
       <StatusBar style="dark" />
@@ -217,3 +309,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
 });
+
+// navigation.navigate("MealDetail", { mealId: id });
+// const mealId = route.params.mealId;

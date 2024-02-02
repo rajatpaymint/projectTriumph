@@ -1,7 +1,7 @@
-import { Text, View, StyleSheet, Image, Dimensions, ImageBackground, TouchableWithoutFeedback, Modal, ScrollView } from "react-native";
+import { Text, View, StyleSheet, Image, Dimensions, ImageBackground } from "react-native";
 import { Colors } from "../Constants/styles";
 import { Ionicons } from "@expo/vector-icons";
-import PollButton from "./PollButton";
+import SourceButton from "./SourceButton";
 import LearnButton from "./LearnButton";
 import { LinearGradient } from "expo-linear-gradient";
 
@@ -19,11 +19,14 @@ const imageWidth = Math.round(windowWidth);
 console.log("Image Width: ", imageWidth);
 const commentBoxHeight = Math.round(windowHeight / 9);
 
-function NewsItem({ headline, news, commentsData, newsLearn }) {
+function NewsItem({ headline, news, createdDate, imageLink, articleLink, navigation }) {
   const [learnModalOpen, setLearnModalOpen] = useState(false);
   const [askModalOpen, setAskModalOpen] = useState(false);
-  function pollButtonHandler() {
-    console.log("Poll button pressed");
+
+  function sourceButtonHandler() {
+    console.log("Source button pressed");
+    // Linking.openURL(articleLink).catch((err) => console.error("Couldn't load page", err));
+    navigation.navigate("Webpage", { link: articleLink });
   }
   function learnButtonHandler() {
     console.log("Learn button pressed");
@@ -41,31 +44,38 @@ function NewsItem({ headline, news, commentsData, newsLearn }) {
   return (
     <>
       <AskModal visible={true && askModalOpen} closeOnPress={modalCloseHandler} />
-      <LearnModal visible={true && learnModalOpen} text={newsLearn} closeOnPress={modalCloseHandler} />
+      <LearnModal visible={true && learnModalOpen} text={"newsLearn"} closeOnPress={modalCloseHandler} />
       <View style={styles.outerContainer}>
-        <View style={styles.imageView}>
-          <ImageBackground source={require("../assets/images/byjusSample.png")} resizeMode="cover" imageStyle={{ opacity: 0.3 }}>
-            <Image source={require("../assets/images/byjusSample.png")} style={styles.image}></Image>
-          </ImageBackground>
-        </View>
-        <View style={styles.headlineContainer}>
-          <Text style={styles.headlineText}>{headline}</Text>
-        </View>
-        <View style={styles.newsContainer}>
-          <Text style={styles.newsText}>{news}</Text>
+        <View>
+          <View style={styles.imageView}>
+            {/* <ImageBackground source={require("../assets/images/byjusSample.png")} resizeMode="cover" imageStyle={{ opacity: 0.3 }}> */}
+            <ImageBackground source={{ uri: imageLink }} resizeMode="cover" imageStyle={{ opacity: 0.3 }}>
+              {/* <Image source={require("../assets/images/byjusSample.png")} style={styles.image}></Image> */}
+              <Image source={{ uri: imageLink }} style={styles.image}></Image>
+            </ImageBackground>
+          </View>
+          <View style={styles.headlineContainer}>
+            <Text style={styles.headlineText}>{headline}</Text>
+          </View>
+          <View style={styles.newsContainer}>
+            <Text style={styles.newsText}>{news}</Text>
+          </View>
         </View>
 
-        <View style={styles.commentOuterContainer}>
+        {/* <View style={styles.commentOuterContainer}>
           <View style={styles.commentImage}>
             <Ionicons name="chatbubble-ellipses" size={18} color="black" />
             <Ionicons name="arrow-down-circle-outline" size={18} color="black" />
           </View>
           <FlatList data={commentsData} renderItem={(itemData) => <Text style={styles.commentText}>{itemData.item.comment}</Text>} keyExtractor={(item) => item.id.toString()} contentContainerStyle={styles.flatlistCC} style={styles.flatlist} nestedScrollEnabled={true} />
-        </View>
+        </View> */}
 
-        <View>
+        <View style={styles.footer}>
+          <View>
+            <Text style={styles.dateText}>{createdDate}</Text>
+          </View>
           <View style={styles.buttonContainer}>
-            <PollButton onPress={pollButtonHandler} />
+            <SourceButton onPress={sourceButtonHandler} />
             <LearnButton onPress={learnButtonHandler} />
             <AskButton onPress={askButtonHandler} />
           </View>
@@ -101,8 +111,8 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   headlineText: {
+    fontFamily: "OpenSans-SemiBold",
     fontSize: 20,
-    fontWeight: "bold",
   },
   newsContainer: {
     marginTop: 10,
@@ -110,6 +120,7 @@ const styles = StyleSheet.create({
     marginRight: 5,
   },
   newsText: {
+    fontFamily: "OpenSans-Regular",
     fontSize: 14,
     lineHeight: 18,
   },
@@ -136,6 +147,12 @@ const styles = StyleSheet.create({
     borderBottomColor: "grey",
     marginBottom: 6,
   },
+  footer: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginLeft: 15,
+  },
   buttonContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -143,5 +160,10 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 10,
     marginRight: 10,
+  },
+  dateText: {
+    fontFamily: "OpenSans-Regular",
+    fontSize: 10,
+    color: "#545454",
   },
 });
