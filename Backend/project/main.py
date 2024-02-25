@@ -1,8 +1,4 @@
-from fileinput import filename
-from locale import currency
-from sqlite3 import paramstyle
-from itertools import repeat
-# from django.shortcuts import render
+
 from flask import (
     Flask,
     app,
@@ -10,59 +6,45 @@ from flask import (
     redirect,
     request,
     url_for,
-    flash,
-    session,
     Blueprint,
-    escape,
     current_app,
     jsonify,
-    json,
     make_response,
-    send_file,
-    send_from_directory,
-    Response,
 )
 import pymssql
 import datetime
 from datetime import date, timedelta, timezone
-import time
-import pandas as pd
-import statistics
-import math
-import calendar
-from calendar import monthrange
-from num2words import num2words
 import uuid
-from io import BytesIO
-from fpdf import FPDF
-import decimal
-import qrcode
-import base64
-import requests
 import uuid
 from fiscalyear import *
-import fiscalyear
-import logging
-import os
-import numpy as np
-import smtplib
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-import base64
-from Cryptodome.Cipher import AES
-import socket
-from email.mime.application import MIMEApplication
-from email.mime.multipart import MIMEMultipart
-from email.mime.text import MIMEText
-from io import StringIO
 import boto3
+from botocore.client import Config
 import random
 import openai
-from bs4 import BeautifulSoup
-
+import httpx
+from httpx import Timeout
+import asyncio
+import traceback
+import requests
+import threading
+import pathlib
+import textwrap
+import google.generativeai as genai
+import IPython
+from IPython.display import display
+from IPython.display import Markdown
+import markdown
 
 main = Blueprint("main", __name__)
 
+
+def make_async_request(url, json_payload):
+    """Function to send request in a separate thread."""
+    def request_thread():
+        requests.post(url, json=json_payload)
+    
+    thread = threading.Thread(target=request_thread)
+    thread.start()
 
 @main.route('/index', methods=["GET",'POST'])
 def index():
@@ -141,42 +123,119 @@ def addNews():
         cursor.execute(sql, val)
         connLocal.commit()
 
+        url = current_app.config.get('URL')
+        apiUrl = url + '/gptNewsLearn'
+        json_payload = {'newsId': newsId}
+        
+        # Make the request in a separate thread
+        make_async_request(apiUrl, json_payload)
+        
         return redirect(url_for("main.addNews"))
     
+@main.route('/geminiTest', methods=['POST'])
+def geminiTest():
+    if request.method == 'POST':
+        try:
+            def to_markdown(text):
+                text = text.replace('•', '  *')
+                return Markdown(textwrap.indent(text, '> ', predicate=lambda _: True))
+            print('1')
+            genai.configure(api_key=current_app.config.get('GEMINI_KEY'))
+            for m in genai.list_models():
+                if 'generateContent' in m.supported_generation_methods:
+                    print(m.name)
+            model = genai.GenerativeModel('gemini-pro')
+            response = model.generate_content("Give me some financial info about the Indian company PayMate")
+            html = markdown.markdown(response.text)
+            print(html)
+            return(html)
+        
+        except Exception as e:
+            print("Error: ", e)
+
 @main.route('/gptNewsLearn', methods=['POST'])
-def gptNewsLearn():
+async def gptNewsLearn():
     if request.method == 'POST':
         try:
             print("I am inside gpt response")
-    
-            openai.api_key = "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"
-            data = request.get_json()
-            prompt = data['prompt']
-            print ("Prompt: ", prompt)
-            # client = OpenAI()
 
-            response = openai.chat.completions.create(
-                model="gpt-4-turbo-preview",
-                messages=[
-                    {
-                    "role": "system",
-                    "content": "YOu will be provided with a material copy-pasted from a news article website. So it may contain some random text as well. YOur job is to filter it and sumarise the news in under 200 words."
+            data = request.get_json()
+            newsId = data['newsId']
+            connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+            cursor = connLocal.cursor()
+            
+            sql = "SELECT * FROM newsMain WHERE id=%s"
+            val = (newsId, )
+            cursor.execute(sql, val)
+            sqlData = cursor.fetchall()
+            newsSummary = sqlData[0][6]
+            prompt = "Ggive me some good statistical and conceptual educative content for entreprenuers about the subject matter of the following news in under 500 words: " + str(newsSummary)
+            print("Prompt: ", prompt)
+            timeout = Timeout(60.0)
+            # Replace the OpenAI API call with an async HTTPX call
+            # AIzaSyC0fylPcv1EufknkpmPxycy0GPZXFw9YsE
+            async with httpx.AsyncClient(timeout=timeout) as client:
+                response = await client.post(
+                    'https://api.openai.com/v1/chat/completions',
+                    headers={
+                        "Authorization": f"Bearer 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",
+                        "Content-Type": "application/json",
                     },
-                    {
-                    "role": "user",
-                    "content": "Give me 3 key statistical facts about main subjet of the following news article: In FY23, PayMate, a B2B payments firm preparing for an IPO, marginally reduced its net loss to INR 55.7 Cr from INR 57.7 Cr in FY22. Operating revenue grew 11.7% to INR 1,350.1 Cr, driven by a shift from paper-based to digital workflows. The company saw a substantial 84.53% increase in customer adoption, expanding its base to over 390,000, with growth in CEMEA and APAC regions. PayMate's total payment volume rose 21% to INR 84,519 Cr. Total revenue reached INR 1,351.6 Cr, despite an 11% rise in expenses. The company is reconsidering its IPO plans, initially postponed due to market volatility."
-                    }
-                ],
-                temperature=0.8,
-                max_tokens=400,
-                top_p=1
+                    json={
+                        "model": "gpt-4-turbo-preview",
+                        "messages": [
+                            {
+                                "role": "system",
+                                "content": "You are embedded in an education platform and will be given a news summary as input. Your job is to provide more educative learnings and context about the subject material of that news."
+                            },
+                            {
+                                "role": "user",
+                                "content": prompt
+                            }
+                        ],
+                        "temperature": 0.8,
+                        "max_tokens": 400,
+                        "top_p": 1
+                    },
                 )
-            print ((response.choices[0].message.content))
-            return("Succcess")
+                # Process the response
+                response_data = response.json()
+                print("Response _______________________: ",response_data)
+            # genai.configure(api_key="AIzaSyC0fylPcv1EufknkpmPxycy0GPZXFw9YsE")
+            # for m in genai.list_models():
+            #     if 'generateContent' in m.supported_generation_methods:
+            #         print(m.name)
+            # model = genai.GenerativeModel('gemini-pro')
+            # response = model.generate_content(prompt)
+            # print(response.text)
+            sql = "SELECT * FROM newsLearn WHERE newsId=%s"
+            val = (newsId, )
+            cursor.execute(sql,val)
+            sqlData = cursor.fetchall()
+            if sqlData:
+                sql = 'UPDATE newsLearn SET learnMore=%s, addedDate=%s WHERE newsId=%s'
+                val =(response_data['choices'][0]['message']['content'], datetime.datetime.now(), newsId)
+                # val =(response.text, datetime.datetime.now(), newsId)
+                cursor.execute(sql, val)
+                connLocal.commit()
+            else:
+                sql = "INSERT INTO newsLearn (newsId, learnMore, addedDate) VALUES (%s, %s, %s)"
+                val = (newsId, response_data['choices'][0]['message']['content'], datetime.datetime.now())
+                # val = (newsId, response.text, datetime.datetime.now())
+                cursor.execute(sql, val)
+                connLocal.commit()
+            
+            cursor.close()
+            connLocal.close()
+
+            respData = {'statusCode':'200', 'apiMessage':'success'}
+            response = make_response(jsonify(respData),200)
+            return response
             
         except Exception as e:
-            print("Error: ", e)
-            return("Failed")
+            traceback.print_exc()  # This prints the traceback of the exception to stderr
+            print(f"Error: {str(e)}")  # Printing the string representation of the exception
+            return jsonify({"error": "Failed", "details": str(e)}), 500
 
 @main.route('/addArticle', methods = ['GET','POST'])
 def addArticle():
@@ -336,3 +395,257 @@ def addEvent():
         print("Event Time: ", eventTime)
         
         return redirect(url_for('main.addEvent'))
+    
+@main.route('/addInvestor', methods=['GET','POST'])
+def addInvestor():
+    if request.method == 'GET':
+        connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+        cursor = connLocal.cursor()
+
+        sql = "SELECT * FROM investorDirectory ORDER BY name ASC"
+        cursor.execute(sql)
+        sqlData = cursor.fetchall()
+        investorList = sqlData
+        return render_template('addInvestor.html', investorList=investorList)
+    else:
+        id = str(uuid.uuid4())
+        createdDate = datetime.datetime.today()
+        name = request.form.get('name')
+        sectors = request.form.get('sectors')
+        stage = request.form.get('stage')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        website = request.form.get('website')
+        linkedIn = request.form.get('linkedIn')
+        city = request.form.get('city')
+        country = request.form.get('country')
+
+        connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+        cursor = connLocal.cursor()
+
+        sql = "INSERT INTO investorDirectory (id, createdDate, name, sectors, stage, email, phone, website, linkedIn, city, country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (id, createdDate, name, sectors, stage, email, phone, website, linkedIn, city, country)
+        cursor.execute(sql, val)
+        connLocal.commit()
+
+        return redirect(url_for('main.addInvestor'))
+
+@main.route('/addIncubator', methods=['GET','POST'])
+def addIncubator():
+    if request.method == 'GET':
+        connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+        cursor = connLocal.cursor()
+
+        sql = "SELECT * FROM incubatorDirectory ORDER BY createdDate DESC"
+        cursor.execute(sql)
+        sqlData = cursor.fetchall()
+        incubatorList = sqlData
+
+        return render_template('addIncubator.html', incubatorList=incubatorList)
+    else:
+        id = str(uuid.uuid4())
+        createdDate = datetime.datetime.today()
+        name = request.form.get('name')
+        about = request.form.get('about')
+        email = request.form.get('email')
+        phone = request.form.get('phone')
+        website = request.form.get('website')
+        linkedIn = request.form.get('linkedIn')
+        city = request.form.get('city')
+        country = request.form.get('country')
+
+        connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+        cursor = connLocal.cursor()
+
+        sql = "INSERT INTO incubatorDirectory (id, createdDate, name, about, email, phone, website, linkedIn, city, country) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+        val = (id, createdDate, name, about, email, phone, website, linkedIn, city, country)
+        cursor.execute(sql, val)
+        connLocal.commit()
+
+        return redirect(url_for('main.addIncubator'))
+    
+@main.route('/testDownload', methods=['POST'])
+def testDownload():
+    if request.method=='POST':
+        data = request.get_json()
+        filename = data['filename']
+
+        s3 = boto3.client('s3',region_name='ap-south-1', config=Config(signature_version='s3v4'))
+        bucket_name = 'z2pappstorage1'
+        object_key = filename
+
+        presigned_url = s3.generate_presigned_url('get_object', Params={'Bucket': bucket_name, 'Key': filename}, ExpiresIn=3600)  # URL expires in 1 hour
+        return jsonify({'url': presigned_url})
+    
+@main.route('/subscriptionManager', methods=['GET','POST'])
+def subscriptionManager():
+    if request.method == 'GET':
+        connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+        cursor = connLocal.cursor()
+
+        sql = "SELECT * FROM subscriptionMaster ORDER BY subscribedDate DESC"
+        cursor.execute(sql)
+        sqlData = cursor.fetchall()
+        subscriptionData = sqlData
+
+        sql = "SELECT * FROM subscriptionList WHERE status=%s and subscriptionId NOT IN (%s)"
+        val = ('active', '0')
+        cursor.execute(sql,val)
+        sqlData = cursor.fetchall()
+        subscriptionList = sqlData
+        
+        connLocal.close()
+        cursor.close()
+
+
+        return render_template('subscriptionManager.html', subscriptionData=subscriptionData, subscriptionList=subscriptionList)
+    else:
+        id = str(uuid.uuid4())
+        userId = request.form.get('userId')
+        subscriptionId = str(request.form.get('subscriptionId'))
+        print('Subscription Id: ', subscriptionId)
+
+        connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+        cursor = connLocal.cursor()
+        sql = "SELECT * FROM subscriptionList WHERE status=%s and subscriptionId=%s"
+        val = ('active', subscriptionId)
+        cursor.execute(sql,val)
+        sqlData = cursor.fetchall()
+
+        name = sqlData[0][1]
+        price = sqlData[0][2]
+        subscribedDate = request.form.get('subscribedDate')
+        endDate = request.form.get('endDate')
+        print("Dates: ", subscribedDate, endDate)
+        currency = "INR"
+        paymentMasterId = request.form.get('paymentMasterId')
+        dateToday = datetime.datetime.now()
+        lastUpdate = dateToday
+
+        sql = "SELECT * FROM subscriptionMaster WHERE userId=%s and subscriptionId=%s and status=%s"
+        val = (userId, '0', 'active')
+        cursor.execute(sql,val)
+        sqlData = cursor.fetchall()
+
+        if sqlData:
+            sql = "UPDATE subscriptionMaster SET status=%s, lastUpdated=%s WHERE userId=%s and subscriptionId=%s and status=%s"
+            val = ('inactive', datetime.datetime.now(), userId, '0', 'active')
+            cursor.execute(sql,val)
+            connLocal.commit()
+
+            sql = "INSERT INTO subscriptionMaster (id, userId, subscriptionId, name, subscribedDate, endDate, price, currency, status, paymentMasterId, lastUpdated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            val = (id, userId, subscriptionId, name, subscribedDate, endDate, price, currency, 'active', paymentMasterId, datetime.datetime.now())
+            cursor.execute(sql,val)
+            connLocal.commit()
+            
+        else:
+            print("No free plan detected")
+            
+
+        connLocal.close()
+        cursor.close()
+        return redirect(url_for('main.subscriptionManager'))
+
+@main.route('/makeSubscriptionInactive', methods = ['POST'])
+def makeSubscriptionInactive():
+    if request.method == 'POST':
+        try:
+            print("I am in makeSubscriptionInactive")
+            data = request.get_json()
+            id = data['id']
+            userId = data['userId']
+
+            connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+            cursor = connLocal.cursor()
+
+            sql = "SELECT * FROM subscriptionMaster WHERE id=%s and status=%s"
+            val = (id, 'active')
+            cursor.execute(sql, val)
+            sqlData = cursor.fetchall()
+
+            if sqlData:
+                dateToday = datetime.datetime.now()
+                sql = "UPDATE subscriptionMaster SET status=%s, lastUpdated=%s WHERE id=%s"
+                val = ('inactive', dateToday, id)
+                cursor.execute(sql, val)
+                connLocal.commit()
+
+                
+                endDate = dateToday + timedelta(days = 7300)
+                sql = "INSERT INTO subscriptionMaster (id, userId, subscriptionId, name, subscribedDate, endDate, price, currency, status, lastUpdated) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+                val = (str(uuid.uuid4()), userId, str(0), 'free', dateToday, endDate, 0, 'INR', 'active', dateToday)
+                cursor.execute(sql, val)
+                connLocal.commit()
+
+                responseData = {'message':"Success"}
+                response = make_response(jsonify(responseData),200)
+                return (response)
+            
+            else:
+                responseData = {'message':"Failure. You did not select an active plan!"}
+                response = make_response(jsonify(responseData),200)
+                return (response)
+
+        except Exception as e:
+            print(e)
+            responseData = {'message': e}
+            response = make_response(jsonify(responseData),200)
+            return (response)
+
+@main.route('/addResource', methods = ['GET','POST'])
+def addResource():
+    if request.method == 'GET':
+
+        connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+        cursor = connLocal.cursor()
+
+        sql = 'SELECT * FROM resourceMaster ORDER BY createdDate DESC'
+        cursor.execute(sql)
+        sqlData = cursor.fetchall()
+        resourceList = sqlData
+
+        sql = "SELECT * FROM resourceFolder ORDER BY createdDate DESC"
+        cursor.execute(sql)
+        sqlData = cursor.fetchall()
+        folderList = sqlData
+
+        cursor.close()
+        connLocal.close()
+
+        return render_template('addResource.html', resourceList=resourceList, folderList=folderList)
+    
+    else:
+
+        name = request.form.get('name')
+        resourceFile = request.files['resourceFile']
+        folder = request.form.get('folder')
+        fileExt = request.form.get('fileExt')
+        description = request.form.get('description')
+
+        s3 = boto3.client('s3')
+        bucket_name = 'z2pappstorage1'
+        folder_name = "Resources/" + folder
+        print("Folder name: ", folder)
+
+        resourceFileName = str(random.randint(10000,99999)) + str(datetime.datetime.today()) + "resource"
+        resourceFileName = resourceFileName.replace(':','-')
+        resourceFileName = resourceFileName.replace('.','-')
+        resourceFileName = resourceFileName.replace(' ','-')
+        resourceFileName = resourceFileName + "." + fileExt
+
+        resourceFileKey = f'{folder_name}/{resourceFileName}'
+        s3.upload_fileobj(resourceFile, bucket_name, resourceFileKey)
+        resourceLink = folder_name + "/" + resourceFileName
+
+        connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+        cursor = connLocal.cursor()
+
+        sql = "INSERT INTO resourceMaster (createdDate, folder, name, fileLink, published, description) VALUES (%s, %s, %s, %s, %s, %s)"
+        val = (datetime.datetime.today(), folder, name, resourceLink, 'yes', description)
+        cursor.execute(sql, val)
+        connLocal.commit()
+
+        cursor.close()
+        connLocal.close()
+
+        return redirect(url_for('main.addResource'))

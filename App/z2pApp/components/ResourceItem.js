@@ -1,22 +1,21 @@
 import { Text, View, StyleSheet, Pressable, Image, Dimensions } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-windowWidth = Dimensions.get("window").width;
+const windowWidth = Dimensions.get("window").width;
 
-function ResourceItem({ headline, about }) {
+function ResourceItem({ folder, id }) {
+  const navigation = useNavigation();
+  function folderPressHandler() {
+    console.log("id: ", id);
+    navigation.navigate("ResourceItemScreen", {
+      id: id,
+    });
+  }
   return (
-    <Pressable>
-      <View style={styles.mainContainer}>
-        <View style={styles.imageBox}>
-          <Image source={require("../assets/images/termsheet.png")} style={styles.image} />
-        </View>
-        <View style={styles.dataWrapper}>
-          <View>
-            <Text style={styles.titleText}>{headline}</Text>
-          </View>
-          <View>
-            <Text style={styles.aboutText}>{about}</Text>
-          </View>
-        </View>
+    <Pressable onPress={folderPressHandler} style={({ pressed }) => (pressed ? [styles.pressed] : [])}>
+      <View style={styles.outerContainer}>
+        <Image source={require("../assets/images/folderIcon.png")} style={styles.folderIcon} />
+        <Text style={[styles.text]}>{folder}</Text>
       </View>
     </Pressable>
   );
@@ -25,43 +24,30 @@ function ResourceItem({ headline, about }) {
 export default ResourceItem;
 
 const styles = StyleSheet.create({
-  mainContainer: {
-    flexDirection: "row",
+  outerContainer: {
+    flex: 1,
+    backgroundColor: "#f4f4f4",
+    marginBottom: 20,
+    marginHorizontal: 10,
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    borderRadius: 20,
+    shadowColor: "black",
+    shadowOffset: { width: 8, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 3, // Only affects Android
     alignItems: "center",
-    marginBottom: 5,
-    elevation: 1,
+    justifyContent: "center",
   },
-  imageBox: {
-    marginLeft: 5,
-    height: 45,
-    width: 45,
+  folderIcon: {
+    height: 40,
+    width: 40,
   },
-  image: {
-    height: 45,
-    width: 45,
-    resizeMode: "cover",
-    borderRadius: 10,
+  text: {
+    fontFamily: "OpenSans-Regular",
   },
-  dataWrapper: {
-    marginLeft: 5,
-    paddingLeft: 5,
-    backgroundColor: "white",
-    borderRadius: 10,
-    elevation: 2,
-    width: windowWidth - 45 - 15,
-    justifyContent: "space-between",
-    paddingBottom: 3,
-  },
-  titleText: {
-    fontWeight: "bold",
-    fontSize: 15,
-  },
-  keywordsText: {
-    fontSize: 12,
-    fontStyle: "italic",
-  },
-  aboutText: {
-    fontSize: 12,
-    marginTop: 10,
+  pressed: {
+    opacity: 0.9,
   },
 });

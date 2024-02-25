@@ -10,27 +10,30 @@ import AskButton from "./AskButton";
 import { useState } from "react";
 import LearnModal from "./LearnModal";
 import AskModal from "./AskModal";
+import { fetchNewsLearn } from "../api/appApi";
 
 const windowWidth = Dimensions.get("window").width;
 const windowHeight = Dimensions.get("window").height;
 const imageHeight = Math.round(windowHeight / 4);
 console.log("Image Height: ", imageHeight);
-const imageWidth = Math.round(windowWidth);
-console.log("Image Width: ", imageWidth);
+
 const commentBoxHeight = Math.round(windowHeight / 9);
 
-function NewsItem({ headline, news, createdDate, imageLink, articleLink, navigation }) {
+function NewsItem({ headline, news, createdDate, imageLink, articleLink, navigation, id }) {
   const [learnModalOpen, setLearnModalOpen] = useState(false);
   const [askModalOpen, setAskModalOpen] = useState(false);
+  const [learnContent, setLearnContent] = useState("Loading...");
 
   function sourceButtonHandler() {
     console.log("Source button pressed");
     // Linking.openURL(articleLink).catch((err) => console.error("Couldn't load page", err));
     navigation.navigate("Webpage", { link: articleLink });
   }
-  function learnButtonHandler() {
+  async function learnButtonHandler() {
     console.log("Learn button pressed");
     setLearnModalOpen(true);
+    const response = await fetchNewsLearn(id);
+    setLearnContent(response["newsLearnContent"]);
   }
   function askButtonHandler() {
     console.log("Ask button pressed");
@@ -44,12 +47,12 @@ function NewsItem({ headline, news, createdDate, imageLink, articleLink, navigat
   return (
     <>
       <AskModal visible={true && askModalOpen} closeOnPress={modalCloseHandler} />
-      <LearnModal visible={true && learnModalOpen} text={"newsLearn"} closeOnPress={modalCloseHandler} />
+      <LearnModal visible={true && learnModalOpen} text={learnContent} closeOnPress={modalCloseHandler} />
       <View style={styles.outerContainer}>
         <View>
           <View style={styles.imageView}>
             {/* <ImageBackground source={require("../assets/images/byjusSample.png")} resizeMode="cover" imageStyle={{ opacity: 0.3 }}> */}
-            <ImageBackground source={{ uri: imageLink }} resizeMode="cover" imageStyle={{ opacity: 0.3 }}>
+            <ImageBackground source={{ uri: imageLink }} resizeMode="cover" imageStyle={{ opacity: 0.3, borderTopLeftRadius: 10, borderTopRightRadius: 10 }}>
               {/* <Image source={require("../assets/images/byjusSample.png")} style={styles.image}></Image> */}
               <Image source={{ uri: imageLink }} style={styles.image}></Image>
             </ImageBackground>
@@ -90,25 +93,30 @@ export default NewsItem;
 const styles = StyleSheet.create({
   outerContainer: {
     backgroundColor: "white",
-    marginBottom: 20,
-    elevation: 2,
-    borderTopWidth: 1,
-    borderTopColor: "#E5E2E3",
+    marginBottom: 30,
+    marginHorizontal: 10,
+    minHeight: windowHeight - 70,
+    justifyContent: "space-between",
+    shadowColor: "black",
+    shadowOffset: { width: 8, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 2, // Only affects Android
+    borderRadius: 10,
   },
   image: {
     height: imageHeight,
-    width: imageWidth,
+    width: windowWidth - 20,
     resizeMode: "center",
   },
   imageView: {
-    width: imageWidth,
+    width: windowWidth - 20,
     alignItems: "center",
     justifyContent: "center",
   },
   headlineContainer: {
     marginTop: 10,
-    marginLeft: 15,
-    marginRight: 5,
+    paddingHorizontal: 15,
   },
   headlineText: {
     fontFamily: "OpenSans-SemiBold",
@@ -116,8 +124,7 @@ const styles = StyleSheet.create({
   },
   newsContainer: {
     marginTop: 10,
-    marginLeft: 15,
-    marginRight: 5,
+    paddingHorizontal: 15,
   },
   newsText: {
     fontFamily: "OpenSans-Regular",

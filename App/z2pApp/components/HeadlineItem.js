@@ -25,13 +25,13 @@ function HeadlineItem({ headline, createdDate, id, imageLink, navigation }) {
   console.log("Created DAtE: ", createdDate);
   return (
     <Pressable onPress={headlineItemPressHandler} style={({ pressed }) => pressed && [styles.pressed]} android_ripple={{ color: "white" }}>
-      <View style={styles.outerContainer}>
+      <View style={styles.masterBox}>
         <View style={styles.imageContainer}>
           <ImageBackground source={{ uri: imageLink }} resizeMode="cover" imageStyle={{ opacity: 0.3 }}>
             <Image source={{ uri: imageLink }} style={styles.image} />
           </ImageBackground>
         </View>
-        <View style={styles.newsContainer}>
+        <View style={styles.outerContainer}>
           <Text style={styles.newsText}>{headline}</Text>
           <View style={styles.dateContainer}>
             <Text style={styles.dateText}>{createdDate}</Text>
@@ -45,40 +45,49 @@ function HeadlineItem({ headline, createdDate, id, imageLink, navigation }) {
 export default HeadlineItem;
 
 const styles = StyleSheet.create({
-  outerContainer: {
+  masterBox: {
     flexDirection: "row",
-    backgroundColor: "white",
-    elevation: 2,
-    marginBottom: 10,
+    marginBottom: 15,
+    minHeight: 80,
   },
   imageContainer: {
-    height: 100,
-    width: 100,
+    marginLeft: 5,
+    marginRight: 5,
+    width: 60,
+    alignItems: "center",
+    justifyContent: "center",
   },
   image: {
-    height: 100,
-    width: 100,
+    height: 60,
+    width: 60,
     resizeMode: "contain",
   },
-  newsContainer: {
-    width: windowWidth - 100,
+  outerContainer: {
+    backgroundColor: "white",
+    width: windowWidth - 70,
     paddingLeft: 5,
     paddingRight: 10,
     justifyContent: "space-between",
+    borderTopLeftRadius: 10,
+    borderBottomLeftRadius: 10,
+    shadowColor: "black",
+    shadowOffset: { width: 8, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 2, // Only affects Android
   },
   newsText: {
-    fontFamily: "OpenSans-SemiBold",
-    fontSize: 16,
+    fontFamily: "OpenSans-Regular",
+    fontSize: 14,
     color: "#545454",
   },
   dateContainer: {
     alignItems: "flex-end",
-    marginBottom: 1,
   },
   dateText: {
     fontFamily: "OpenSans-Regular",
     fontSize: 10,
-    color: "#545454",
+    color: "#ADAAAB",
   },
   pressed: {
     opacity: 0.6,

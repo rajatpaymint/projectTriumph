@@ -43,7 +43,7 @@ function NewsMain({ navigation }) {
       <View style={styles.flatlistContainer}>
         <FlatList
           data={data}
-          renderItem={(itemData) => <NewsItem headline={itemData.item.headline} news={itemData.item.summary} imageLink={itemData.item.imageLink} createdDate={itemData.item.createdDate} articleLink={itemData.item.articleLink} navigation={navigation} />}
+          renderItem={(itemData) => <NewsItem id={itemData.item.id} headline={itemData.item.headline} news={itemData.item.summary} imageLink={itemData.item.imageLink} createdDate={itemData.item.createdDate} articleLink={itemData.item.articleLink} navigation={navigation} />}
           keyExtractor={(item) => item.id.toString()}
           nestedScrollEnabled={true}
           style={styles.flatlist}
@@ -60,6 +60,7 @@ export default NewsMain;
 const styles = StyleSheet.create({
   outerContainer: {
     flex: 1,
+    marginTop: 5,
   },
   flatlistContainer: {
     flex: 1,

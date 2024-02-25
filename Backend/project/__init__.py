@@ -1,5 +1,6 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_bcrypt import Bcrypt
 # from flask_apscheduler import APScheduler
 
 deployment_type = "local"
@@ -9,6 +10,7 @@ deployment_type = "local"
 #def create_app():
 app = Flask(__name__, static_folder='static')
 CORS(app)
+bcrypt = Bcrypt(app)
 
 if deployment_type == "prod":
     app.config.from_object('config.configProd')

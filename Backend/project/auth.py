@@ -9,11 +9,10 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 import re
-import base64
-from Cryptodome.Cipher import AES
-import socket
 import random
 import string
+from flask_bcrypt import Bcrypt
+from . import bcrypt
 
 def userSessionGenerator(length):
     # With combination of lower and upper case
@@ -40,7 +39,8 @@ def signup():
         name = request.form.get('name')
         salt = request.form.get('salt')
         password = request.form.get('password')
-        passwordHashed = generate_password_hash(password, method='sha256')
+        # passwordHashed = generate_password_hash(password, method='sha256')
+        passwordHashed = bcrypt.generate_password_hash(password).decode('utf-8')
         salt = request.form.get('salt')
         print("Name: ", current_app.config.get('SERVER_LOCAL'))
         
@@ -93,7 +93,8 @@ def login():
             cursor.close()
             #connLocal.close()
             return render_template('login.html',message="Invalid Username or Password! Please try again.")  
-        elif not check_password_hash(user[0][3], password):
+        # elif not check_password_hash(user[0][3], password):
+        elif not bcrypt.check_password_hash(user[0][3], password):
             return render_template('login.html',message="YOu have entered an incorrect password")
        
         else:

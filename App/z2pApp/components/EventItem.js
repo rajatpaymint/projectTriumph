@@ -46,11 +46,15 @@ const styles = StyleSheet.create({
   mainContainer: {
     width: windowWidth - 30,
     marginHorizontal: 15,
-    marginVertical: 5,
+    marginBottom: 20,
     backgroundColor: "white",
-    elevation: 2,
     borderRadius: 10,
     overflow: "hidden",
+    shadowColor: "black",
+    shadowOffset: { width: 8, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 2, // Only affects Android
   },
   imageView: {
     paddingTop: 0,

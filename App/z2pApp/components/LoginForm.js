@@ -5,10 +5,12 @@ import PrimaryButton from "./PrimaryButton";
 import axios from "axios";
 import { URL } from "../Constants/urls";
 import { AuthContext } from "../Store/z2pContext";
+import ScreenLoading from "./ScreenLoading";
 
 function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const authCtx = useContext(AuthContext);
 
@@ -20,6 +22,7 @@ function LoginForm() {
   }
 
   async function loginButton() {
+    setIsLoading(true);
     console.log("Login button press");
     console.log("email: ", email);
     try {
@@ -28,6 +31,7 @@ function LoginForm() {
         password: password,
       });
       if (response.data["statusCode"] != 0) {
+        setIsLoading(false);
         Alert.alert("Oops", response.data["apiMessage"], [
           {
             text: "Ok",
@@ -41,6 +45,8 @@ function LoginForm() {
         authCtx.setEmailContext(email);
         authCtx.setCityContext(response.data["city"]);
         authCtx.setNameContext(response.data["name"]);
+        authCtx.setSubscriptionIdContext(response.data["subscriptionId"]);
+        setIsLoading(false);
       }
     } catch (error) {
       console.log("Error: ", error);
@@ -49,6 +55,7 @@ function LoginForm() {
 
   return (
     <>
+      <ScreenLoading visible={isLoading} />
       <View style={styles.emailContainer}>
         <TextInput style={styles.emailInput} autoCapitalize="none" autoCorrect={false} onChangeText={emailInputHandler} placeholder="Email" placeholderTextColor="grey" maxLength={50} />
       </View>

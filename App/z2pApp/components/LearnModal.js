@@ -19,7 +19,8 @@ function LearnModal({ visible, text, closeOnPress }) {
     >
       <View style={styles.modalOverlayContainer}>
         <View style={styles.modalOverlayContent}>
-          <ScrollView>
+          <ScrollView contentContainerStyle={{ flexGrow: 1 }}>
+            {/* <Markdown style={styles.modalText}>{text}</Markdown> */}
             <Text style={styles.modalText}>{text}</Text>
           </ScrollView>
         </View>
