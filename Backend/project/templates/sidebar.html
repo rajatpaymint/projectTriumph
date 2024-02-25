@@ -23,7 +23,7 @@
 
       <li class="{% if request.endpoint.split('.')[1] == 'addNews' %} active {% else %} {% endif %}">
         <a href="{{url_for('main.addNews')}}" class="waves-effect waves-dark">
-          <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+          <span class="pcoded-micon"><i class="ti-more"></i><b>D</b></span>
           <span class="pcoded-mtext" data-i18n="nav.dash.main">Add News</span>
           <span class="pcoded-mcaret"></span>
         </a>
@@ -31,7 +31,7 @@
 
       <li class="{% if request.endpoint.split('.')[1] == 'addArticle' %} active {% else %} {% endif %}">
         <a href="{{url_for('main.addArticle')}}" class="waves-effect waves-dark">
-          <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+          <span class="pcoded-micon"><i class="ti-more"></i><b>D</b></span>
           <span class="pcoded-mtext" data-i18n="nav.dash.main">Add Article</span>
           <span class="pcoded-mcaret"></span>
         </a>
@@ -39,15 +39,43 @@
 
       <li class="{% if request.endpoint.split('.')[1] == 'askExpert' %} active {% else %} {% endif %}">
         <a href="{{url_for('main.askExpert')}}" class="waves-effect waves-dark">
-          <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+          <span class="pcoded-micon"><i class="ti-more"></i><b>D</b></span>
           <span class="pcoded-mtext" data-i18n="nav.dash.main">Ask an Expert</span>
           <span class="pcoded-mcaret"></span>
         </a>
       </li>
       <li class="{% if request.endpoint.split('.')[1] == 'addEvent' %} active {% else %} {% endif %}">
         <a href="{{url_for('main.addEvent')}}" class="waves-effect waves-dark">
-          <span class="pcoded-micon"><i class="ti-home"></i><b>D</b></span>
+          <span class="pcoded-micon"><i class="ti-more"></i><b>D</b></span>
           <span class="pcoded-mtext" data-i18n="nav.dash.main">Add Event</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+      <li class="{% if request.endpoint.split('.')[1] == 'addInvestor' %} active {% else %} {% endif %}">
+        <a href="{{url_for('main.addInvestor')}}" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-more"></i><b>D</b></span>
+          <span class="pcoded-mtext" data-i18n="nav.dash.main">Add Investor</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+      <li class="{% if request.endpoint.split('.')[1] == 'addIncubator' %} active {% else %} {% endif %}">
+        <a href="{{url_for('main.addIncubator')}}" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-more"></i><b>D</b></span>
+          <span class="pcoded-mtext" data-i18n="nav.dash.main">Add Incubator</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+      <li class="{% if request.endpoint.split('.')[1] == 'subscriptionManager' %} active {% else %} {% endif %}">
+        <a href="{{url_for('main.subscriptionManager')}}" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-more"></i><b>D</b></span>
+          <span class="pcoded-mtext" data-i18n="nav.dash.main">Subscription Manager</span>
+          <span class="pcoded-mcaret"></span>
+        </a>
+      </li>
+      <li class="{% if request.endpoint.split('.')[1] == 'addResource' %} active {% else %} {% endif %}">
+        <a href="{{url_for('main.addResource')}}" class="waves-effect waves-dark">
+          <span class="pcoded-micon"><i class="ti-more"></i><b>D</b></span>
+          <span class="pcoded-mtext" data-i18n="nav.dash.main">Add Resource</span>
           <span class="pcoded-mcaret"></span>
         </a>
       </li>

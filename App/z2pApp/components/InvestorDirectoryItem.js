@@ -2,11 +2,16 @@ import { Text, View, StyleSheet } from "react-native";
 import SourceButton from "./SourceButton";
 import LinkedinButton from "./LinkedinButton";
 
-function InvestorDirectoryItem({ name, sectors, stage, email, phone }) {
+function InvestorDirectoryItem({ name, sectors, stage, email, phone, website, linkedIn, navigation }) {
+  function websitePressHandler() {
+    navigation.navigate("Webpage", { link: website });
+  }
+  function linkedInButtonHandler() {
+    navigation.navigate("Webpage", { link: linkedIn });
+  }
   return (
     <View style={styles.background}>
       <View style={{ flexDirection: "row" }}>
-        <Text style={{ fontWeight: "bold" }}>1) </Text>
         <Text style={{ fontWeight: "bold" }}>{name}</Text>
       </View>
       <View style={styles.detailsContainer}>
@@ -27,8 +32,8 @@ function InvestorDirectoryItem({ name, sectors, stage, email, phone }) {
           <Text>{phone}</Text>
         </View>
         <View style={styles.buttonContainer}>
-          <SourceButton />
-          <LinkedinButton />
+          <SourceButton onPress={websitePressHandler} />
+          <LinkedinButton onPress={linkedInButtonHandler} />
         </View>
       </View>
     </View>
@@ -46,6 +51,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     borderRadius: 10,
     paddingVertical: 5,
+    shadowColor: "black",
+    shadowOffset: { width: 8, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 2, // Only affects Android
   },
   buttonContainer: {
     flexDirection: "row",

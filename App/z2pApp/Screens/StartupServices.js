@@ -1,6 +1,7 @@
 import { Text, View, Image, StyleSheet, Dimensions, Alert } from "react-native";
 import { FlatList } from "react-native-gesture-handler";
 import StartupServiceItem from "../components/StartupServiceItem";
+import { useState } from "react";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -33,6 +34,8 @@ const data = [
 ];
 
 function StartupServices({ navigation }) {
+  const [order, setOrder] = useState();
+
   function servicePressHandler(id) {
     if (id === 3) {
       navigation.navigate("PitchMaking");
@@ -63,6 +66,7 @@ export default StartupServices;
 const styles = StyleSheet.create({
   background: {
     flex: 1,
+    backgroundColor: "white",
   },
   flatlistContainer: {
     flex: 1,

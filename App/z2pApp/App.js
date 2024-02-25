@@ -34,25 +34,33 @@ import IncubatorScreen from "./Screens/IncubatorScreen";
 import PitchMaking from "./Screens/PitchMaking";
 import FinancialModelling from "./Screens/FinancialModelling";
 import InvestorTermsheet from "./Screens/InvestorTermsheet";
+import SubscriptionScreen from "./Screens/SubscriptionScreen";
+import { checkToken } from "./api/appApi";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import LogoutButton from "./components/LogoutButton";
+import MarketResearch from "./Screens/MarketResearch";
+import ResourceItemScreen from "./Screens/ResourceItemScreen";
 
 const Stack = createNativeStackNavigator();
 const Drawer = createDrawerNavigator();
 
-const DrawerNewsIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/newspaper.svg")} />;
-const DrawerHeadlinesIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/list-items.svg")} />;
-const DrawerAskIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/ask-me.svg")} />;
-const DrawerFeedIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/shuttle.svg")} />;
-const DrawerNewsletterIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/vip-card.svg")} />;
-const DrawerDatabaserIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/folders.svg")} />;
-const DrawerTopicIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/category.svg")} />;
-const DrawerFindJobIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/job.svg")} />;
-const DrawerPostJobIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/postJob.svg")} />;
-const DrawerResourceIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/resource.svg")} />;
-const DrawerProfileIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/profile.svg")} />;
-const DrawerEventsIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/events.svg")} />;
-const DrawerInvestorIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/investor.svg")} />;
-const DrawerServicesIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/consultancy.svg")} />;
-const DrawerOfficeIcon = () => <Image style={{ width: 30, height: 30 }} source={require("./assets/images/office.svg")} />;
+const DrawerNewsIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/newspaper.svg")} />;
+const DrawerHeadlinesIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/list-items.svg")} />;
+const DrawerAskIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/ask-me.svg")} />;
+const DrawerFeedIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/shuttle.svg")} />;
+const DrawerNewsletterIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/vip-card.svg")} />;
+const DrawerDatabaserIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/folders.svg")} />;
+const DrawerTopicIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/category.svg")} />;
+const DrawerFindJobIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/job.svg")} />;
+const DrawerPostJobIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/postJob.svg")} />;
+const DrawerResourceIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/resource.svg")} />;
+const DrawerProfileIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/profile.svg")} />;
+const DrawerEventsIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/events.svg")} />;
+const DrawerInvestorIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/investor.svg")} />;
+const DrawerServicesIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/consultancy.svg")} />;
+const DrawerOfficeIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/office.svg")} />;
+const DrawerPremiumIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/crown.svg")} />;
+const DrawerMarketResearcIcon = () => <Image style={{ width: 25, height: 25 }} source={require("./assets/images/market-research.svg")} />;
 
 function AuthStack() {
   return (
@@ -71,7 +79,7 @@ function AuthStack() {
 function AuthenticatedDrawerStack() {
   return (
     <Drawer.Navigator
-      initialRouteName="NewsLetter"
+      initialRouteName="Resource Center"
       screenOptions={{
         drawerActiveBackgroundColor: Colors.primary500,
         drawerActiveTintColor: "white",
@@ -84,6 +92,9 @@ function AuthenticatedDrawerStack() {
           borderBottomColor: Colors.grey100,
           borderBottomWidth: 2,
         },
+        headerTitleStyle: {
+          fontSize: 15, // Adjust the font size as needed
+        },
       }}
     >
       <Drawer.Screen
@@ -91,7 +102,7 @@ function AuthenticatedDrawerStack() {
         component={NewsLetter}
         options={{
           title: "Premium Articles",
-          headerTitle: "Z2P Premium",
+          headerTitle: "Premium Articles",
           backgroundColor: "white",
           drawerIcon: () => <DrawerNewsletterIcon />,
           unmountOnBlur: true,
@@ -128,13 +139,23 @@ function AuthenticatedDrawerStack() {
           unmountOnBlur: true,
         }}
       />
-      <Drawer.Screen
+      {/* <Drawer.Screen
         name="Topics"
         component={NewTopicsScreen}
         options={{
           title: "Startup Sectors",
           backgroundColor: "white",
           drawerIcon: () => <DrawerTopicIcon />,
+          unmountOnBlur: true,
+        }}
+      /> */}
+      <Drawer.Screen
+        name="Market Research"
+        component={MarketResearch}
+        options={{
+          title: "Market Report",
+          backgroundColor: "white",
+          drawerIcon: () => <DrawerMarketResearcIcon />,
           unmountOnBlur: true,
         }}
       />
@@ -181,12 +202,12 @@ function AuthenticatedDrawerStack() {
         }}
       />
       <Drawer.Screen
-        name="ResourceCenter"
-        component={ResourceCenter}
+        name="SubscriptionScreen"
+        component={SubscriptionScreen}
         options={{
-          title: "Resource Center",
+          title: "My Subscription",
           backgroundColor: "white",
-          drawerIcon: () => <DrawerResourceIcon />,
+          drawerIcon: () => <DrawerPremiumIcon />,
           unmountOnBlur: true,
         }}
       />
@@ -197,6 +218,18 @@ function AuthenticatedDrawerStack() {
           title: "Profile",
           backgroundColor: "white",
           drawerIcon: () => <DrawerProfileIcon />,
+          headerRight: () => <LogoutButton />,
+          unmountOnBlur: true,
+        }}
+      />
+      <Drawer.Screen
+        name="Resource Center"
+        component={ResourceCenter}
+        options={{
+          title: "Resource Center",
+          backgroundColor: "white",
+          drawerIcon: () => <DrawerResourceIcon />,
+          unmountOnBlur: true,
         }}
       />
     </Drawer.Navigator>
@@ -256,22 +289,54 @@ function AuthenticatedStack() {
           title: "Investor Termsheet",
         }}
       />
+      <Stack.Screen
+        name="ResourceItemScreen"
+        component={ResourceItemScreen}
+        options={{
+          title: "Resources",
+        }}
+      />
     </Stack.Navigator>
   );
 }
 
 function Navigation() {
   const authCtx = useContext(AuthContext);
+  const [isVerifyToken, setIsVerifyToken] = useState(false);
+  useEffect(() => {
+    async function verifyToken() {
+      console.log("In verifyToken");
+      const userId = await AsyncStorage.getItem("userId");
+      const token = await AsyncStorage.getItem("token");
+      console.log("In verifyToken: ", userId, token);
+      console.log("Inverifytoken2");
 
-  return (
-    <NavigationContainer>
-      {!authCtx.isAuthenticated && <AuthStack />}
-      {authCtx.isAuthenticated && <AuthenticatedStack />}
-    </NavigationContainer>
-  );
+      if (userId && token) {
+        console.log("Inside the loop1");
+        const response = await checkToken(userId, token);
+        console.log("Response: ", response);
+        const isTokenValid = response["apiMessage"];
+        if (isTokenValid === "valid") {
+          console.log("Token is valid: ", response["token"]);
+          authCtx.authenticate(response["token"]);
+          authCtx.setTokenExpiryContext(response["tokenExpiryTime"]);
+          authCtx.setUserIdContext(userId);
+          authCtx.setEmailContext(response["email"]);
+          authCtx.setCityContext(response["city"]);
+          authCtx.setNameContext(response["name"]);
+          authCtx.setSubscriptionIdContext(response["subscriptionId"]);
+        }
+      }
+      setIsVerifyToken(true);
+    }
+    verifyToken();
+  }, []);
+
+  return <>{isVerifyToken ? <NavigationContainer>{!authCtx.isAuthenticated ? <AuthStack /> : <AuthenticatedStack />}</NavigationContainer> : <SplashScreen />}</>;
 }
 
 export default function App() {
+  const authCtx = useContext(AuthContext);
   const [fontsLoaded] = useFonts({
     "OpenSans-Light": require("./assets/fonts/OpenSans-Light.ttf"),
     "OpenSans-Regular": require("./assets/fonts/OpenSans-Regular.ttf"),
@@ -284,7 +349,6 @@ export default function App() {
     const timer = setTimeout(() => {
       setSplashLoading(false);
     }, 200); // Adjust the time as needed
-
     return () => clearTimeout(timer);
   }, []);
 

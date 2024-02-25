@@ -49,6 +49,8 @@ class configLocal(config):
     # PASSWORD_LOCAL= "Admin@123"
     PASSWORD_LOCAL="MyPass@word"
     DB_LOCAL = "projectTriumph"
+    URL = "https://572f-2401-4900-1ca3-7b94-f9e0-5745-bb58-abfe.ngrok-free.app/"
+    GEMINI_KEY = "AIzaSyC0fylPcv1EufknkpmPxycy0GPZXFw9YsE"
 
     SERVER = "192.168.2.4\\UATDB2008"
     PORT = "1310"
@@ -66,14 +68,7 @@ class configLocal(config):
 
     # UAE API AUTH
     # Prod
-    UAE_URL = "https://my.paymate.ae/api/CommonAPI/PayableTransactions"
-    UAE_HEADERS = {
-        "MMID": "PMXUAEMERCM002",
-        "MTID": "PMXUAETERMM002",
-        "XpressID": "PAYUAEAPI1",
-        "MethodName": "All",
-        "IPAdress": "52.140.83.70",
-    }
+    
 
     # UAE UAT API
     # UAE_URL = 'https://dev.paymate.in/Beta/PMXUAE/api/CommonAPI/PayableTransactions'

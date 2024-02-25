@@ -208,6 +208,7 @@
                                     <th class="calc">imageLink</th>
                                     <th class="calc">fileLink</th>
                                     <th class="calc">isPremium</th>
+                                    <th class="calc">description</th>
                                   </tr>
                                 </thead>
                                 <tbody>
@@ -221,6 +222,7 @@
                                     <td style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"><a href="{{ row[6] }}" target="_blank">{{row[6]}}</a></td>
                                     <td style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap"><a href="{{ row[7] }}" target="_blank">{{row[7]}}</a></td>
                                     <td>{{row[8]}}</td>
+                                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap" onclick="toggleSummary(this)">{{row[9]}}</td>
                                   </tr>
                                   {% endfor %}
                                 </tbody>

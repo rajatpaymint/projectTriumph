@@ -41,12 +41,12 @@ function Headlines({ navigation }) {
   return (
     <View style={styles.screenBackground}>
       <ScreenLoading visible={isLoading} />
-      <View style={styles.questionBox}>
+      {/* <View style={styles.questionBox}>
         <View style={styles.searchIconImage}>
           <Ionicons name="search" size={16} color="#545454" />
         </View>
         <TextInput style={styles.modalText} autoCapitalize="none" autoCorrect={false} onChangeText={headlineSearchInputHandler} placeholder="Search news" placeholderTextColor="#545454" maxLength={50} />
-      </View>
+      </View> */}
       <FlatList
         data={data}
         renderItem={(itemData) => <HeadlineItem headline={itemData.item.headline} createdDate={itemData.item.createdDate} id={itemData.item.id} imageLink={itemData.item.imageLink} navigation={navigation} />}
@@ -63,6 +63,8 @@ export default Headlines;
 const styles = StyleSheet.create({
   screenBackground: {
     flex: 1,
+    backgroundColor: "#f4f4f4",
+    paddingTop: 5,
   },
   questionBox: {
     backgroundColor: "#D9D9D9",

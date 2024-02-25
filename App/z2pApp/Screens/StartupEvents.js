@@ -59,6 +59,8 @@ export default StartupEvents;
 const styles = StyleSheet.create({
   background: {
     flex: 1,
+    backgroundColor: "#f4f4f4",
+    marginTop: 5,
   },
   eventBox: {
     flex: 1,

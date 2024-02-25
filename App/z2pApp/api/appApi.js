@@ -1,6 +1,17 @@
 import axios from "axios";
 import { URL } from "../Constants/urls";
 
+export async function GoogleSigninFunction(email, name, profilePhoto) {
+  console.log("Inside fetch GoogleSingin");
+  const response = await axios.post(URL.appApiUrl + "/app/GoogleSignin", {
+    email: email,
+    name: name,
+    profilePhoto: profilePhoto,
+  });
+  console.log("Response.data: ", response.data);
+  return response.data;
+}
+
 export async function getAllTopics() {
   const response = await axios.post(URL.appApiUrl + "/app/getAllTopics");
   allTopicData = response.data["topicList"];
@@ -49,6 +60,24 @@ export async function getProfileDetails(email) {
   return data;
 }
 
+export async function saveProfilePhone(userId, phone) {
+  console.log("In saveProfilePhone");
+  const response = await axios.post(URL.appApiUrl + "/app/saveProfilePhone", {
+    userId: userId,
+    phone: phone,
+  });
+  return response.data;
+}
+
+export async function saveProfileCity(userId, city) {
+  console.log("In saveProfileCity");
+  const response = await axios.post(URL.appApiUrl + "/app/saveProfileCity", {
+    userId: userId,
+    city: city,
+  });
+  return response.data;
+}
+
 export async function getNewsletterList(currentPage, pageLength) {
   const response = await axios.post(URL.appApiUrl + "/app/getNewsletterList", {
     currentPage: currentPage,
@@ -82,6 +111,14 @@ export async function getNewsList(currentPage, pageLength) {
     apiMessage: response.data["apiMessage"],
   };
   return data;
+}
+
+export async function fetchNewsLearn(newsId) {
+  console.log("Inside fetchNewsLearn");
+  const response = await axios.post(URL.appApiUrl + "/app/getNewsLearn", {
+    newsId: newsId,
+  });
+  return response.data;
 }
 
 export async function getHeadlines(currentPage, pageLength) {
@@ -149,6 +186,7 @@ export async function getQuestions(userId) {
     statusCode: response.data["statusCode"],
     apiMessage: response.data["apiMessage"],
   };
+  console.log("Data: ", data);
   return data;
 }
 
@@ -188,4 +226,120 @@ export async function getCityList() {
     cityList: response.data["cityList"],
   };
   return data;
+}
+
+export async function getInvestorDirectory(currentPage, pageLength) {
+  console.log("Entered into getInvestors");
+  const response = await axios.post(URL.appApiUrl + "/app/getInvestorDirectory", {
+    currentPage: currentPage,
+    pageLength: pageLength,
+  });
+  data = {
+    investorList: response.data["investorList"],
+    statusCode: response.data["statusCode"],
+    apiMessage: response.data["apiMessage"],
+  };
+  console.log("Data: ", data);
+  return data;
+}
+
+export async function getIncubators(currentPage, pageLength) {
+  console.group("Entered into getIncubators");
+  const response = await axios.post(URL.appApiUrl + "/app/getIncubators", {
+    currentPage: currentPage,
+    pageLength: pageLength,
+  });
+  data = {
+    incubatorList: response.data["incubatorList"],
+    statusCode: response.data["statusCode"],
+    apiMessage: response.data["apiMessage"],
+  };
+  console.log("Data: ", data);
+  return data;
+}
+
+export async function createOrder(amount, subscriptionId, userId) {
+  console.log("Entered createOrder");
+  const response = await axios.post(URL.appApiUrl + "/app/createOrder", {
+    amount: amount,
+    subscriptionId: subscriptionId,
+    userId: userId,
+  });
+  console.log("Response data: ", response.data);
+  return response.data;
+}
+
+export async function updatePayment(checkoutData) {
+  console.log("I am in update payment: ", checkoutData);
+  const response = await axios.post(URL.appApiUrl + "/app/updatePayment", {
+    pgOrderId: checkoutData["razorpay_order_id"],
+    pgPaymentId: checkoutData["razorpay_payment_id"],
+    pgSignature: checkoutData["razorpay_signature"],
+    pgStatus: checkoutData["status_code"],
+  });
+  console.log("Response data: ", response.data);
+  return response.data;
+}
+
+export async function getUserSubscription(userId) {
+  console.log("Entered getUserSubscription: ", userId);
+  const response = await axios.post(URL.appApiUrl + "/app/getUserSubscription", {
+    userId: userId,
+  });
+  console.log("Response data: ", response.data);
+  return response.data;
+}
+
+export async function getSubscriptionList() {
+  console.log("Entered getSubscriptionList");
+  const response = await axios.post(URL.appApiUrl + "/app/getSubscriptionList");
+  console.log("Subscription List: ", response.data);
+  return response.data;
+}
+
+export async function checkToken(userId, token) {
+  console.log("I am in checkToken");
+  const response = await axios.post(URL.appApiUrl + "/app/checkToken", {
+    userId: userId,
+    token: token,
+  });
+  console.log("checkToken Response: ", response.data);
+  return response.data;
+}
+
+export async function generateMarketReport(industry, marketType, subscriptionId, userId) {
+  console.log("I am in generateMarketReport");
+  const response = await axios.post(URL.appApiUrl + "/app/generateMarketReport", {
+    industry: industry,
+    marketType: marketType,
+    subscriptionId: subscriptionId,
+    userId: userId,
+  });
+  console.log(response.data);
+  return response.data;
+}
+
+export async function getFolderList() {
+  console.log("IN getFolderList");
+  const response = await axios.post(URL.appApiUrl + "/app/getFolderList");
+  console.log("Response: ", response.data);
+  return response.data;
+}
+
+export async function getResourceItems(id) {
+  console.log("In getResourceItems");
+  const response = await axios.post(URL.appApiUrl + "/app/getResourceItems", {
+    id: id,
+  });
+  console.log("FileList Data: ", response.data);
+  return response.data;
+}
+
+export async function getSingleFile(id) {
+  console.log("In getSingleFile");
+  const response = await axios.post(URL.appApiUrl + "/app/getSingleFile", {
+    id: id,
+  });
+  console.log("Response Data: ", response.data);
+  return response.data;
 }

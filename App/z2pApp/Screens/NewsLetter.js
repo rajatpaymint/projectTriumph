@@ -1,53 +1,12 @@
 import { View, Text, StyleSheet, Dimensions, TextInput, ActivityIndicator } from "react-native";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { FlatList } from "react-native-gesture-handler";
 import PrimaryButton from "../components/PrimaryButton";
 import NewsletterItem from "../components/NewsletterItem";
 import ScreenLoading from "../components/ScreenLoading";
 import { getNewsletterList } from "../api/appApi";
-
-const newsletterData = [
-  {
-    id: 1,
-    headline: "The whole story behind the collapse of Byju's",
-    date: "26 Sept 2023",
-  },
-  {
-    id: 2,
-    headline: "The whole story behind the collapse of Byju's",
-    date: "26 Sept 2023",
-  },
-  {
-    id: 3,
-    headline: "The whole story behind the collapse of Byju's",
-    date: "26 Sept 2023",
-  },
-  {
-    id: 4,
-    headline: "The whole story behind the collapse of Byju's",
-    date: "26 Sept 2023",
-  },
-  {
-    id: 5,
-    headline: "The whole story behind the collapse of Byju's",
-    date: "26 Sept 2023",
-  },
-  {
-    id: 6,
-    headline: "The whole story behind the collapse of Byju's",
-    date: "26 Sept 2023",
-  },
-  {
-    id: 7,
-    headline: "The whole story behind the collapse of Byju's",
-    date: "26 Sept 2023",
-  },
-  {
-    id: 8,
-    headline: "The whole story behind the collapse of Byju's",
-    date: "26 Sept 2023",
-  },
-];
+import { AuthContext } from "../Store/z2pContext";
+import SubscriptionModal from "../components/SubscriptionModal";
 
 const windowWidth = Dimensions.get("window").width;
 
@@ -56,6 +15,8 @@ function NewsLetter({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
   const [data, setData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const authCtx = useContext(AuthContext);
+  const [loadSubscriptionModal, setLoadSubscriptionModal] = useState(false);
 
   function searchInputHandler(text) {
     setSearchItem(text);
@@ -63,9 +24,20 @@ function NewsLetter({ navigation }) {
   function searchButtonHandler() {
     console.log("Search Button Press: ", searchItem);
   }
-  function newletterPressHandler(id) {
-    console.log("Newsletter Press: ", id);
-    navigation.navigate("NewsletterSingle", { id: id });
+  function newletterPressHandler(id, isPremium) {
+    console.log("Newsletter Press: ", id, isPremium, authCtx.subscriptionId);
+    if (isPremium === "yes" && authCtx.subscriptionId === "0") {
+      setLoadSubscriptionModal(true);
+      console.log("Load Subscription modal: ", loadSubscriptionModal);
+      console.log("I am here");
+    } else {
+      navigation.navigate("NewsletterSingle", { id: id });
+    }
+  }
+
+  function modalCloseHandler() {
+    console.log("Close modal press");
+    setLoadSubscriptionModal(false);
   }
 
   async function fetchNewsLetters() {
@@ -104,18 +76,21 @@ function NewsLetter({ navigation }) {
   return (
     <View style={styles.background}>
       <ScreenLoading visible={isLoading} />
-      <View style={styles.questionBoxOuterContainer}>
+      <SubscriptionModal visible={loadSubscriptionModal} onPress={modalCloseHandler} text={"This is a premium Z2P article and requires a membership."} />
+      {/* <View style={styles.questionBoxOuterContainer}>
         <View style={styles.questionBox}>
           <TextInput style={styles.searchText} onChangeText={searchInputHandler} autoCapitalize="none" autoCorrect={false} placeholder="Search articles by keywords" placeholderTextColor="#545454" maxLength={100} multiline={false} />
           <View style={styles.buttonContainer}>
             <PrimaryButton children={"Search"} buttonPress={searchButtonHandler} />
           </View>
         </View>
-      </View>
+      </View> */}
       <View style={styles.flatlistContainer}>
         <FlatList
           data={data}
-          renderItem={(itemData) => <NewsletterItem headline={itemData.item.headline} date={itemData.item.publishDate} imageLink={itemData.item.imageLink} isPremium={itemData.item.isPremium} onPress={newletterPressHandler.bind(this, itemData.item.id)} />}
+          renderItem={(itemData) => (
+            <NewsletterItem headline={itemData.item.headline} date={itemData.item.publishDate} imageLink={itemData.item.imageLink} isPremium={itemData.item.isPremium} description={itemData.item.description} onPress={newletterPressHandler.bind(this, itemData.item.id, itemData.item.isPremium)} />
+          )}
           keyExtractor={(item) => item.id.toString()}
           onEndReached={handleLoadMore}
           onEndReachedThreshold={0}
@@ -130,8 +105,9 @@ export default NewsLetter;
 
 const styles = StyleSheet.create({
   background: {
-    backgroundColor: "white",
+    backgroundColor: "#f4f4f4",
     flex: 1,
+    marginTop: 5,
   },
   questionBoxOuterContainer: {
     alignItems: "center",

@@ -15,15 +15,20 @@ export default PrimaryButton;
 
 const styles = StyleSheet.create({
   buttonOuterContainer: {
-    borderRadius: 28,
+    borderRadius: 20,
     margin: 4,
     overflow: "hidden",
+    // Shadow Styles
+    shadowColor: "black",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 1, // for Android shadow
   },
   buttonInnerContainer: {
     backgroundColor: Colors.primary500,
     paddingVertical: 8,
     paddingHorizontal: 16,
-    elevation: 2,
   },
   buttonText: {
     fontFamily: "OpenSans-SemiBold",

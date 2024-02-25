@@ -20,14 +20,18 @@ export default StartupServiceItem;
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    backgroundColor: "white",
+    backgroundColor: "#f4f4f4",
     marginVertical: 10,
     marginHorizontal: 10,
     height: 100,
     justifyContent: "center",
     alignItems: "center",
     borderRadius: 10,
-    elevation: 3,
+    shadowColor: "black",
+    shadowOffset: { width: 8, height: 8 },
+    shadowOpacity: 1,
+    shadowRadius: 8,
+    elevation: 3, // Only affects Android
   },
   text: {
     fontFamily: "OpenSans-Regular",
