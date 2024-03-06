@@ -31,7 +31,17 @@ UPDATE appTokenMaster SET status='inactive' WHERE id=35
 
 --------------End of appTokenMaster--------------------
 
-
+select *
+from INFORMATION_SCHEMA.COLUMNS
+where TABLE_NAME='userAuth'
+CREATE TABLE userAuth (
+    id VARCHAR(255) PRIMARY KEY,
+    name VARCHAR(100),
+    email VARCHAR(50),
+    password VARCHAR(500),
+    signupDate DATETIME,
+    lastlogin DATETIME
+)
 SELECT * FROM userAuth
 DELETE FROM userAuth WHERE name='Rajat'
 
@@ -70,7 +80,8 @@ CREATE TABLE newsletterMain (
     createdBy VARCHAR(255),
     imageLink VARCHAR(2000),
     fileLink VARCHAR(2000),
-    isPremium VARCHAR(10)
+    isPremium VARCHAR(10),
+    description VARCHAR(3000)
 )
 
 SELECT * FROM newsletterMain
@@ -121,13 +132,14 @@ CREATE TABLE
 
 -------------Start of topicMaster---------------
 CREATE TABLE topicMaster(
-    id INT PRIMARY KEY IDENTITY(1,1),
+    id INT PRIMARY KEY,
     topic VARCHAR(200),
     status VARCHAR(50),
     iconLink VARCHAR(2000)
 )
 
 SELECT * FROM topicMaster
+DROP TABLE topicMaster
 -------------End of topicMaster---------------
 
 -------------Start of questionMaster---------------
@@ -179,6 +191,7 @@ CREATE TABLE cityList(
 )
 
 SELECT * FROM cityList
+
 
 -------------End of cityMaster---------------
 

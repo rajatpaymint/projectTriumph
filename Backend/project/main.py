@@ -34,8 +34,10 @@ import IPython
 from IPython.display import display
 from IPython.display import Markdown
 import markdown
+import logging
 
 main = Blueprint("main", __name__)
+logging.basicConfig(filename='misDashboardLog.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
 
 def make_async_request(url, json_payload):
@@ -111,6 +113,7 @@ def addNews():
         filename = filename.replace(':','-')
         filename = filename.replace('.','-')
         filename = filename.replace(' ','-')
+        filename = filename + ".png"
         s3_file_key = f'{folder_name}/{filename}'
         s3.upload_fileobj(imageFile, bucket_name, s3_file_key, ExtraArgs={'ACL': 'public-read'})
         imageLink = f'https://{bucket_name}.s3.ap-south-1.amazonaws.com/{s3_file_key}'
@@ -126,7 +129,7 @@ def addNews():
         url = current_app.config.get('URL')
         apiUrl = url + '/gptNewsLearn'
         json_payload = {'newsId': newsId}
-        
+        print("I am here now2")
         # Make the request in a separate thread
         make_async_request(apiUrl, json_payload)
         
@@ -169,7 +172,7 @@ async def gptNewsLearn():
             cursor.execute(sql, val)
             sqlData = cursor.fetchall()
             newsSummary = sqlData[0][6]
-            prompt = "Ggive me some good statistical and conceptual educative content for entreprenuers about the subject matter of the following news in under 500 words: " + str(newsSummary)
+            prompt = "Give me good deeper statistical and conceptual content about the subject matter of the following news in under 500 words: " + str(newsSummary)
             print("Prompt: ", prompt)
             timeout = Timeout(60.0)
             # Replace the OpenAI API call with an async HTTPX call
@@ -178,7 +181,7 @@ async def gptNewsLearn():
                 response = await client.post(
                     'https://api.openai.com/v1/chat/completions',
                     headers={
-                        "Authorization": f"Bearer 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",
+                        "Authorization": "Bearer " + current_app.config.get('OPENAI_APIKEY'),
                         "Content-Type": "application/json",
                     },
                     json={

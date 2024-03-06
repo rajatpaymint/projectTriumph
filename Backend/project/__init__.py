@@ -3,7 +3,8 @@ from flask_cors import CORS
 from flask_bcrypt import Bcrypt
 # from flask_apscheduler import APScheduler
 
-deployment_type = "local"
+deployment_type = "configDevTest"
+# deployment_type = "local"
 # uncomment below line during production 
 # deployment_type = "prod"
 
@@ -25,13 +26,23 @@ if deployment_type == "prod":
     from apiMain import apiMain as apiMain
     app.register_blueprint(apiMain)
 
+elif deployment_type == "configDevTest":
+    app.config.from_object('project.config.configDevTest')
+
+    # blueprint for auth routes in our app
+    from .auth import auth as auth_blueprint
+    app.register_blueprint(auth_blueprint)
+    # blueprint for non-auth parts of app
+    from .main import main as main_blueprint
+    app.register_blueprint(main_blueprint)
+
+    from .apiMain import apiMain as apiMain
+    app.register_blueprint(apiMain)
+
 
 
 else:
     app.config.from_object('project.config.configLocal')
-
-    #db.init_app(app)
-    #s3.init_app(app)
 
     # blueprint for auth routes in our app
     from .auth import auth as auth_blueprint

@@ -1,0 +1,52 @@
+{
+  "expo": {
+    "name": "b2zApp",
+    "slug": "b2zApp",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/z2pAndroidLogo.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.rajat2711.b2zApp"
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/z2pAndroidLogo.png",
+        "backgroundColor": "#ffffff"
+      },
+      "googleServicesFile": "./google-services.json",
+      "package": "com.rajat2711.b2zApp"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png",
+      "config": {
+        "firebase": {
+          "apiKey": "AIzaSyA9PeT2fRwdh6dqHFPmHQQ5dfOij4Cm_w8",
+          "authDomain": "b2zapp.firebaseapp.com",
+          "projectId": "b2zapp",
+          "storageBucket": "b2zapp.appspot.com",
+          "messagingSenderId": "522145863020",
+          "appId": "1:522145863020:web:7665291b97437afa878f49",
+          "measurementId": "G-WH0KY7RKPL"
+        }
+      }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7398e401-9f86-4595-b482-180f7f82eec7"
+      }
+    },
+    "plugins": [
+      "expo-build-properties"
+    ]
+  }
+}

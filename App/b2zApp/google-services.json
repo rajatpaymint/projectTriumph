@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1037189081241",
+    "project_id": "b2zappandroid",
+    "storage_bucket": "b2zappandroid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1037189081241:android:fa94808b742a9f58993008",
+        "android_client_info": {
+          "package_name": "com.rajat2711.b2zApp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDZ8Af-JegVR1Krj0adUQ-DwNKGu8Zxc7o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

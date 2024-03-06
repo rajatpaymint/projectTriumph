@@ -15,6 +15,7 @@ from flask import (
     send_file,
     send_from_directory,
     Response,
+    abort
 )
 import pymssql
 import datetime
@@ -25,7 +26,6 @@ from fiscalyear import *
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 import boto3
-from . import bcrypt
 import razorpay
 import random
 import string
@@ -36,20 +36,37 @@ from IPython.display import display
 from IPython.display import Markdown
 import markdown
 import textwrap
+# from app import bcrypt
+from extensions import bcrypt
+import logging
+from flask_mail import Message
+from itsdangerous import URLSafeTimedSerializer
 
 
 # AKIAU6GD2L4PU4QJEBNU
 # dgLZ4Ah8WCBAyuEUBOxUj8RfmcIBbFtjLi4r4Gtz
 
 apiMain = Blueprint('apiMain', __name__)
+logging.basicConfig(filename='misDashboardLog.log', level=logging.DEBUG, format=f'%(asctime)s %(levelname)s %(name)s %(threadName)s : %(message)s')
 
-@apiMain.route('/app/test', methods=['GET'])
+@apiMain.before_request
+def check_api_key():
+    # Check if the 'X-API-Key' header is present and correct
+    apiKey = request.headers.get('X-API-Key')
+    if apiKey != current_app.config.get('MY_API_KEY'):
+        # If the API key is missing or incorrect, reject the request
+        abort(401, description="Invalid or missing API Key.")
+
+@apiMain.route('/app/test', methods=['POST'])
 def test():
-    if request.method == 'GET':
+    if request.method == 'POST':
         try:
-            return "Rajat"
+            api_key = current_app.config.get('MY_API_KEY')
+            print("___API____: ", api_key)
+            apiKeyHeader = request.headers.get('X-API-Key')
+            return jsonify({"APIKEY from config": api_key, "APIKey from header":apiKeyHeader}), 200
         except Exception as e:
-            return e
+            return ("Error: ", e)
 
 
 @apiMain.route('/app/signup', methods=['POST'])
@@ -162,9 +179,13 @@ def appLogin():
             cursor.execute(sql, val)
             connLocal.commit()
 
-            url = current_app.config.get('URL')
-            response = requests.post(url+'/app/getUserSubscription', json={'userId':userId})
-            response = response.json()
+            # url = current_app.config.get('URL')
+            # headers = {
+            #                 'X-API-Key': current_app.config.get('MY_API_KEY'),
+            #                 'Content-Type': 'application/json'  # Often needed depending on the API
+            #             }
+            # response = requests.post(url+'/app/getUserSubscription', json={'userId':userId}, headers=headers)
+            response = getUserSubscriptionFunction(userId)
             subscriptionId = response['userSubscriptionDetails'][0]['subscriptionId']
 
             cursor.close()
@@ -173,10 +194,104 @@ def appLogin():
             resp = make_response(jsonify(respData), 200)
             return resp
 
+@apiMain.route('/app/forgotPassword', methods=['POST'])
+def forgotPassword():
+    if request.method == 'POST':
+        try:
+            data = request.get_json()
+            email = data['email']
+            print("Email: ", email)
+
+            connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+            cursor = connLocal.cursor()
+
+            sql = "SELECT * FROM userAuthApp WHERE email=%s"
+            val = (email, )
+            cursor.execute(sql, val)
+            sqlData = cursor.fetchall()
+
+            if not sqlData:
+                respData = {'statusCode':1, 'apiMessage':'No user with this email id. Please signup.'}
+                response = make_response(jsonify(respData), 200)
+                cursor.close()
+                connLocal.close()
+                return response
+            else:
+                respData = {'statusCode':0, 'apiMessage':'Password reset link (valid for 60mins) is sent to your registered email. Kindly check your inbox and spam folder.'}
+                response = make_response(jsonify(respData), 200)
+                print("I am here 1")
+                sendPasswordResetLink(email)
+                cursor.close()
+                connLocal.close()
+                return response
+
+        except Exception as e:
+            respData = {'statusCode':1, 'apiMessage':'Failed to reset password at this time, please try again letter.'}
+            response = make_response(jsonify(respData), 200)
+            print('Error: ', e)
+
+def sendPasswordResetLink(user_email):
+    try:
+        print("In sendPasswordResetLink1")
+        resetkey = URLSafeTimedSerializer("random")
+        print("Here6")
+        password_reset_url = url_for('apiMain.password_reset_url_app', token = resetkey.dumps(user_email, salt="password_reset_string"), _external=True)
+        print("Here4")
+        msg = Message(
+        "B2Z Password Reset Link",
+        sender=current_app.config['MAIL_USERNAME'],
+        recipients=[user_email],
+        body="Please click on the following link and reset your B2Z app password: "+password_reset_url,
+        )
+        print("Here5")
+        try:
+            print("Here2")
+            mail = current_app.extensions['mail']
+            mail.send(msg)
+            print("Here3")
+            return jsonify({"message": "Email sent successfully!"}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+    except Exception as e:
+        print("Error: ", e)
+
+@apiMain.route('/password_reset_url_app/<token>', methods = ['GET', 'POST'])
+def password_reset_url_app(token):
+    if request.method == 'POST':
+        try:
+            print("here1")
+            resetkey = URLSafeTimedSerializer("random")
+            email = resetkey.loads(token, salt = "password_reset_string", max_age=3600)
+        except:
+            flash("The link is either expired or invlaid, please try again.")
+        password = request.form.get('password')
+        passwordHashed = bcrypt.generate_password_hash(password).decode('utf-8')
+        connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+        cursor = connLocal.cursor()
+        sql = "UPDATE userAuthApp SET password=%s WHERE email=%s"
+        val =(passwordHashed, email)
+        cursor.execute(sql, val)
+        connLocal.commit()
+        return("Password reset successful")
+
+    else:
+        try:
+            resetkey = URLSafeTimedSerializer("random")
+            email = resetkey.loads(token, salt = "password_reset_string", max_age=3600)
+        except:
+            flash("The link is either expired or invlaid, please try again.")
+            return ("This reset link is expired! Please send a new link from the app.")
+
+        return render_template('resetPassword.html', token=token)
+
+
+
 @apiMain.route('/app/GoogleSignin', methods = ['POST'])
 def GoogleSignin():
     if request.method == 'POST':
         try:
+            print("I am here in app/googlesingin")
             data = request.get_json()
             email = data['email']
             name = data['name']
@@ -203,14 +318,16 @@ def GoogleSignin():
                 val = (userId, 'login')
                 cursor.execute(sql, val)
                 sqlData = cursor.fetchall()
-                print("I am here")
+                print("I am here1")
 
                 if sqlData:
+                    print("I am here2")
                     sql = "DELETE FROM appTokenMaster WHERE userId=%s and tokenType=%s"
                     val = (userId, 'login')
                     cursor.execute(sql, val)
                     connLocal.commit()
                 
+                print("I am here3")
                 token = str(uuid.uuid4())
                 tokenCreationTime = datetime.datetime.now()
                 tokenExpiryTime = tokenCreationTime + timedelta(days=1)
@@ -219,11 +336,23 @@ def GoogleSignin():
                 val = (userId, tokenCreationTime, tokenExpiryTime, 'active', 'login', token)
                 cursor.execute(sql, val)
                 connLocal.commit()
+                print("I am here4")
 
-                url = current_app.config.get('URL')
-                response = requests.post(url+'/app/getUserSubscription', json={'userId':userId})
-                response = response.json()
+                try: 
+                    logging.info("I am in the api within route")
+                    # url = current_app.config.get('URL')
+                    # headers = {
+                    #             'X-API-Key': current_app.config.get('MY_API_KEY'),
+                    #             'Content-Type': 'application/json'  # Often needed depending on the API
+                    #         }
+                    # response = requests.post(url+'/app/getUserSubscription', json={'userId':userId}, headers=headers)
+                    response = getUserSubscriptionFunction(userId)
+                    print("Response is _____: ", response)
+                    print("Response: ", response['userSubscriptionDetails'])
+                except Exception as e:
+                    logging.info("Error logic: ", e)
                 subscriptionId = response['userSubscriptionDetails'][0]['subscriptionId']
+                print("I am here5")
                 print("Subscription Id1: ", subscriptionId)
 
                 cursor.close()
@@ -308,9 +437,13 @@ def appCheckToken():
                     name = sqlData[0][1]
                     print("In app/checkToken3: ", sqlData)
 
-                    url = current_app.config.get('URL')
-                    response = requests.post(url+'/app/getUserSubscription', json={'userId':userId})
-                    response = response.json()
+                    # url = current_app.config.get('URL')
+                    # headers = {
+                    #         'X-API-Key': current_app.config.get('MY_API_KEY'),
+                    #         'Content-Type': 'application/json'  # Often needed depending on the API
+                    #     }
+                    # response = requests.post(url+'/app/getUserSubscription', json={'userId':userId}, headers=headers)
+                    response = getUserSubscriptionFunction(userId)
                     subscriptionId = response['userSubscriptionDetails'][0]['subscriptionId']
                     print("In app/checkToken4: ", subscriptionId)
 
@@ -558,16 +691,15 @@ def getNewsletterList():
 def getSingleArticle():
     if request.method == 'POST':
         try:
-            print("I am into the request")
-            print(os.environ.get('AWS_ACCESS_KEY_ID'))
-            print(os.environ.get('AWS_SECRET_ACCESS_KEY'))
+            logging.info("I am in getSingle Article")
+            print("I am into the request getSinglearticle")
             data = request.get_json()
             id = data['id']
             connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
             cursor = connLocal.cursor()
             print("ID: ", id)
             
-            sql = "SELECT headline,publishDate,createdBy,imageLink,fileLink FROM newsletterMain WHERE id=%s"
+            sql = "SELECT headline,publishDate,createdBy,imageLink,fileLink,description FROM newsletterMain WHERE id=%s"
             val =(id,)
             cursor.execute(sql,val)
             sqlData = cursor.fetchall()
@@ -578,6 +710,7 @@ def getSingleArticle():
             imageLink = sqlData[0][3]
             print("Image Link: ", imageLink)
             fileLink = sqlData[0][4]
+            description = sqlData[0][5]
             id = data['id']
             s3 = boto3.client('s3')
             bucket_name = 'z2pappstorage1'
@@ -589,16 +722,18 @@ def getSingleArticle():
                 htmlContent = file['Body'].read().decode('utf-8')
                 print("HTML Content: ", htmlContent)
             except Exception as e:
-                print(e)
+                print("Error1__________________________: ", e)
+                logging.info("I am in getSingle Article: ", e)
 
             # with open('sampleArticle.html', 'r',encoding='utf-8') as file:
             #     htmlContent = file.read()
             
-            responseData = {'statusCode':0, 'content':htmlContent, 'headline':headline, 'publishDate':publishDate,'createdBy':createdBy,'imageLink':imageLink}
+            responseData = {'statusCode':0, 'content':htmlContent, 'headline':headline, 'publishDate':publishDate,'createdBy':createdBy,'imageLink':imageLink,'description':description}
             response = make_response(jsonify(responseData),200)
             return response
         
         except Exception as e:
+            print("Error2__________________________: ", e)
             responseData = {'statusCode':1, 'content':e}
             response = make_response(jsonify(responseData),200)
             return response
@@ -1198,6 +1333,59 @@ def getUserSubscription():
             response = make_response(jsonify(respData),200)
             return response
         
+def getUserSubscriptionFunction(userId):
+    try:
+        print("I am in /getUserSubscriptionFunction")
+        print("Userid: ", userId)
+        dateToday = datetime.datetime.now()
+        userSubscriptionDetails = []
+        connLocal = pymssql.connect(server=current_app.config.get('SERVER_LOCAL'), port=current_app.config.get('PORT_LOCAL'), user=current_app.config.get('USER_LOCAL'), password=current_app.config.get('PASSWORD_LOCAL'), database=current_app.config.get('DB_LOCAL'))
+        cursor = connLocal.cursor()
+
+        sql = "SELECT * FROM subscriptionMaster WHERE userId = %s and status = 'active'"
+        val = (userId,)
+        cursor.execute(sql,val)
+        sqlData = cursor.fetchall()
+        print("User subs: ", sqlData)
+        print("sqlData[0][5]: ", sqlData[0][5])
+            
+        if ((sqlData[0][5]<dateToday)):
+            print("Here 1")
+            sql = "UPDATE subscriptionMaster SET status='inactive' WHERE userId = %s and id = %s"
+            val = (userId, sqlData[0][0])
+            cursor.execute(sql, val)
+            connLocal.commit()
+            endDate = dateToday + timedelta(days=7300)
+            sql = "INSERT INTO subscriptionMaster (id, userId, subscriptionId, name, subscribedDate, endDate, price, currency, status) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            val = (str(uuid.uuid4()),userId,str(0), 'free', dateToday, endDate, 0, 'INR', 'active')
+            cursor.execute(sql, val)
+            connLocal.commit()
+            dict = {
+                'subscriptionId': 0,
+                'subscribedDate': dateToday,
+                'endDate': endDate
+            }
+            userSubscriptionDetails.append(dict)
+        else:
+            print("Here 2")
+            dict = {
+                'subscriptionId': sqlData[0][2],
+                'subscribedDate': sqlData[0][4],
+                'endDate': sqlData[0][5]
+            }
+            userSubscriptionDetails.append(dict)
+        
+        respData = {'statusCode':200, 'apiMessage':'success', 'userSubscriptionDetails':userSubscriptionDetails}
+        print("RespData: ", respData)
+        response = make_response(jsonify(respData),200)
+        print("Here 3")
+        return respData
+    except Exception as e:
+        print("Error: ", e)
+        respData = {'statusCode':200, 'apiMessage':'failed to load', 'userSubscriptionDetails':[]}
+        response = make_response(jsonify(respData),200)
+        return respData
+
 @apiMain.route('/app/updateSubscription', methods=['POST'])
 def updateSubscription():
     if request.method == 'POST':
@@ -1374,6 +1562,7 @@ def getFolderList():
 def getResourceItems():
     if request.method == 'POST':
         try:
+            print("In get resource Items")
             data = request.get_json()
             folderId = data['id']
 
@@ -1453,3 +1642,21 @@ def getSingleFile():
             respData = {'apiMessage':'failure', 'url':""}
             response = make_response(jsonify(respData), 200)
             return response
+        
+@apiMain.route('/app/sendEmail', methods = ['POST'])
+def sendEmail():
+    if request.method == 'POST':
+        msg = Message(
+        "Hello from the Blueprint",
+        sender=current_app.config['MAIL_USERNAME'],
+        recipients=["yadavrajat800@gmail.com"],
+        body="This is a test email sent from a Flask app using a blueprint!"
+    )
+    try:
+        mail = current_app.extensions['mail']
+        mail.send(msg)
+        return jsonify({"message": "Email sent successfully!"}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+        
+     

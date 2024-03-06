@@ -12,7 +12,9 @@ import re
 import random
 import string
 from flask_bcrypt import Bcrypt
-from . import bcrypt
+# from . import bcrypt
+# from app import bcrypt
+from extensions import bcrypt
 
 def userSessionGenerator(length):
     # With combination of lower and upper case

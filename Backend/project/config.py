@@ -5,71 +5,62 @@ class config(object):
 
 
 class configProd(config):
-    SERVER_LOCAL = "10.1.1.4"
-    PORT_LOCAL = "1310"
-    USER_LOCAL = "Monticola"
-    PASSWORD_LOCAL = b"d7For+EdPd0icqm75rzXGoN64RImJm05Cy0YRkG2mGo="
-    DB_LOCAL = "PayMateMIS"
+    SERVER_LOCAL = "prodexpress.cp4cmc08k900.ap-south-1.rds.amazonaws.com"
+    USER_LOCAL = "admin"
+    PORT_LOCAL = "1433"
+    # PASSWORD_LOCAL= "Admin@123"
+    PASSWORD_LOCAL="Legacy2711-"
+    DB_LOCAL = "projectTriumphTest"
+    URL = "https://b2z.world/"
+    GEMINI_KEY = "AIzaSyC0fylPcv1EufknkpmPxycy0GPZXFw9YsE"
+    OPENAI_APIKEY = "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"
+    APP_DOWNLOAD_URL = "https://www.rajatyadav.info/"
 
-    PMX_SERVER = "PMX2.0"
-    ONECLICK_SERVER = "OneClickPay"
-    CCDB_SERVER = "PayMateCCDB"
-    PMCORP_SERVER = "PMCorporate"
-    SFACORP_SERVER = "SFACorporate"
-    PGSTACK_SERVER = "PGStack"
-    PAYMATE_MARKETPLACE_SERVER = "PayMateMarketPlace"
-    PAYMATE_AAIARLINE = "AAIairline"
-
-    SERVER = "10.1.1.4"
-    PORT = "1310"
-    USER = "Monticola"
-    PASSWORD = b"W/znSJVXdYdQWLHxESHDSv0Fk4HC00YXVrCtqeXEcgU="
-    MASTERGST_CLIENT_ID = "f34fd03e-40d8-4daa-bbd8-65d4e19f0480"
-    MASTERGST_CLIENT_SECRET = "9cdb7dd4-6051-438e-b72a-5166acc16e65"
-    MASTERGST_USERNAME = "API_PayMate2022"
-    MASTERGST_PASSWORD = "Paymate@1"
-    GMAIL_USERNAME = "paymatemis@paymate.co.in"
-    GMAIL_PASSWORD = "PayM@teM1S"
-
-    # UAE API Creds
-    UAE_URL = "https://my.paymate.ae/api/CommonAPI/PayableTransactions"
-    UAE_HEADERS = {
-        "MMID": "PMXUAEMERCM002",
-        "MTID": "PMXUAETERMM002",
-        "XpressID": "PAYUAEAPI1",
-        "MethodName": "All",
-        "IPAdress": "52.140.83.70",
-    }
+    MAIL_SERVER = "smtpout.secureserver.net"
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = "awareness@b2z.club"
+    MAIL_PASSWORD = "Legacy2711-"
+    MY_API_KEY="your_api_key_here"
 
 
 class configLocal(config):
-    SERVER_LOCAL = "localhost"
-    USER_LOCAL = "sa"
+    SERVER_LOCAL = "database-1.cp4cmc08k900.ap-south-1.rds.amazonaws.com"
+    USER_LOCAL = "admin"
     PORT_LOCAL = "1433"
     # PASSWORD_LOCAL= "Admin@123"
-    PASSWORD_LOCAL="MyPass@word"
-    DB_LOCAL = "projectTriumph"
-    URL = "https://572f-2401-4900-1ca3-7b94-f9e0-5745-bb58-abfe.ngrok-free.app/"
+    PASSWORD_LOCAL="Legacy2711-"
+    DB_LOCAL = "projectTriumphTest"
+    URL = "https://39f2-2401-4900-1ca3-7b94-89d0-b947-92f9-217a.ngrok-free.app/"
+    # URL = "http://z2puat.in/"
     GEMINI_KEY = "AIzaSyC0fylPcv1EufknkpmPxycy0GPZXFw9YsE"
+    OPENAI_APIKEY = "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"
+    APP_DOWNLOAD_URL = "https://www.rajatyadav.info/"
 
-    SERVER = "192.168.2.4\\UATDB2008"
-    PORT = "1310"
-    USER = "Citadel"
-    PASSWORD = b"WRI8wrsv7jZdrA429rpFlSMnvMEA9/+IE0HT9tWMHfQ="
-    MASTERGST_CLIENT_ID = "100248ea-dce1-4c68-b715-a9c7bfccbbd4"
-    MASTERGST_CLIENT_SECRET = "a61192a5-7291-45fc-ae61-49dccbad4127"
-    MASTERGST_USERNAME = "paymate"
-    MASTERGST_PASSWORD = "Paymate@1"
-    GMAIL_USERNAME = "paymatemis@paymate.co.in"
-
-    GMAIL_PASSWORD = "PayM@teM1S"
-
-    GMAIL_PASSWORD = "PayM@teM1S"
-
-    # UAE API AUTH
-    # Prod
+    MAIL_SERVER = "smtpout.secureserver.net"
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = "awareness@b2z.club"
+    MAIL_PASSWORD = "Legacy2711-"
+    MY_API_KEY="your_api_key_here"
     
 
-    # UAE UAT API
-    # UAE_URL = 'https://dev.paymate.in/Beta/PMXUAE/api/CommonAPI/PayableTransactions'
-    # UAT_HEADERS = {'MMID':'PMXUAEPMXSCM002', 'MTID':'PMXUAEPMXSCM002','XpressID':'PAYUAEAPI1','MethodName':'All','IPAdress':'171.48.25.159'}
+class configDevTest(config):
+    SERVER_LOCAL = "database-1.cp4cmc08k900.ap-south-1.rds.amazonaws.com"
+    USER_LOCAL = "admin"
+    PORT_LOCAL = "1433"
+    # PASSWORD_LOCAL= "Admin@123"
+    PASSWORD_LOCAL="Legacy2711-"
+    DB_LOCAL = "projectTriumphTest"
+    # URL = "https://39f2-2401-4900-1ca3-7b94-89d0-b947-92f9-217a.ngrok-free.app/"
+    URL = "http://z2puat.in/"
+    GEMINI_KEY = "AIzaSyC0fylPcv1EufknkpmPxycy0GPZXFw9YsE"
+    OPENAI_APIKEY = "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"
+    APP_DOWNLOAD_URL = "https://www.rajatyadav.info/"
+
+    MAIL_SERVER = "smtpout.secureserver.net"
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = "awareness@b2z.club"
+    MAIL_PASSWORD = "Legacy2711-"
+    MY_API_KEY="your_api_key_here"
